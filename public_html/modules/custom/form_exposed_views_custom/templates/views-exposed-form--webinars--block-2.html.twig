@@ -1,0 +1,19 @@
+<div class="webinar-search__left-block">
+    <div class="wrapper__search-webinar px-md-2 px-xs-1" style="width: 100%;"><label class="search-webinar__label">поиск по вебинарам</label>
+        <div class="search-webinar__field">
+            {{ form.title }}
+            <button type="submit"></button>
+        </div>
+    </div>
+</div>
+
+<div class="webinar-search__right-block px-md-2 px-xs-1"><label class="search-webinar__label">выбрать период</label>
+    <div class="wrapper__period-webinar">
+        <div class="search-webinar__period-box input-daterange">
+            {{ form.date_filter_wrapper.date_filter }}
+        </div>
+        {{ form.actions }}
+        {{ form.reset }}
+    </div>
+</div>
+

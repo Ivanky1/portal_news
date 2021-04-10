@@ -1,0 +1,22 @@
+.git
+.idea
+.editorconfig
+.gitattributes
+vendor
+
+/public_html/core/
+/public_html/modules/contrib/
+/public_html/themes/contrib/
+/public_html/profiles/contrib/
+
+# Ignore sensitive information
+/public_html/sites/*/settings.php
+/public_html/sites/*/settings.local.php
+
+
+
+# Ignore .env files as they are personal
+/.env
+/.Trash-0
+
+composer.lock

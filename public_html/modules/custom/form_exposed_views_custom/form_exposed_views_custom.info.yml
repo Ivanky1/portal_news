@@ -1,0 +1,4 @@
+name: Form exposed views custom
+description: Template from exposed views
+core_version_requirement: 8.x || ^9
+type: module

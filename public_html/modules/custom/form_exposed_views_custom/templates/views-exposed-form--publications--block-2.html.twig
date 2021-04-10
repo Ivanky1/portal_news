@@ -1,0 +1,19 @@
+<div class="news-search__row mb-lg-2 mb-md-0 mb-xs-2 px-xs-2"><span
+            class="news-search__label">Поиск по материалам</span>
+    <div class="news-search__main" id="ololo">
+        <div class="news-search__field news-search__field_search">
+            {{ form.title }}
+        </div>
+    </div>
+</div>
+
+<div class="news-search__row px-xs-2"><span class="news-search__label">Выбрать период</span>
+    <div class="news-search__main">
+        <div class="input-daterange news-search__field news-search__field_flex mr-lg-0">
+            {{ form.created_wrapper.created }}
+        </div>
+        {{ form.actions }}
+        {{ form.reset }}
+    </div>
+</div>
+

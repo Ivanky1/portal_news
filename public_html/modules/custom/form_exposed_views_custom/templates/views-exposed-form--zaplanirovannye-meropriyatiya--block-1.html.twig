@@ -1,0 +1,28 @@
+<div>
+    <div class="section page-menu mb-md-6 mb-xs-4 pt-xs-1">
+        <div class="container">
+            <div class="row webinar-search events-search">
+                <div class="col-lg-12 col-xs-12 webinar-search__form enevts-search__form">
+                    <div class="b3_search__row-block">
+                        <div class="webinar-search__left-block b3_search__left-block">
+                            <div class="wrapper__search-webinar px-md-2 px-xs-1">
+                                <div class="search-webinar__field">
+                                    <span class="lupa"></span>
+                                    {{ form.title }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="webinar-search__right-block b3_search__right-block px-md-2 px-xs-1">
+                            <div class="wrapper__period-webinar">
+                                <div class="search-webinar__period-box input-daterange">
+                                    {{ form.created_wrapper.created }}
+                                </div>
+                                {{ form.actions }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

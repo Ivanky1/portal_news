@@ -1,0 +1,16 @@
+form_filter:
+  css:
+    theme:
+      css/form_exposed_views_custom.css: {}
+  js:
+    js/form_exposed_views_custom.js: { }
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - jquery_ui_datepicker/datepicker
+
+partner_filter:
+  js:
+    js/partner_filter.js: { }
+  dependencies:
+    - core/jquery
