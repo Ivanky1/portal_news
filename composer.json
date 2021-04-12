@@ -47,9 +47,7 @@
     "extra": {
         "enable-patching": true,
         "patches": {
-            "drupal/core": {
-                "Grouped exposed taxonomy term filters do not work": "patches/taxonomy_views.patch"
-            }
+
         },
         "drupal-scaffold": {
             "locations": {
