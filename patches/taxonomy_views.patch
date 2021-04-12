@@ -1,0 +1,20 @@
+diff --git a/core/modules/taxonomy/src/Plugin/views/filter/TaxonomyIndexTid.php b/core/modules/taxonomy/src/Plugin/views/filter/TaxonomyIndexTid.php
+index 44133826f1..be5382031e 100644
+--- a/core/modules/taxonomy/src/Plugin/views/filter/TaxonomyIndexTid.php
++++ b/core/modules/taxonomy/src/Plugin/views/filter/TaxonomyIndexTid.php
+@@ -330,9 +330,12 @@ public function acceptExposedInput($input) {
+     $rc = parent::acceptExposedInput($input);
+     if ($rc) {
+       // If we have previously validated input, override.
+-      if (isset($this->validated_exposed_input)) {
+-        $this->value = $this->validated_exposed_input;
+-      }
++      if (!$this->isAGroup() && isset($this->validated_exposed_input)) {
++         $this->value = $this->validated_exposed_input;
++       } else {
++         // This is a group so provide the group values.
++         $this->value = $this->group_info;
++       }
+     }
+ 
+     return $rc;
