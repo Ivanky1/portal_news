@@ -17,11 +17,23 @@ class AllMaterialsFilter {
       $basic_items = '';
       self::addFormListSpeaker($form);
 
-      $is_query_publication_exists = !isset($url_query['publication']) || $url_query['publication'] == '';
+      $is_query_publication_exists = !isset($url_query['publication'])
+        || $url_query['publication'] == '';
 
       if ($form['publication']['#default_value'] == 'today' && $is_query_publication_exists) {
         $form['publication']['#value'] = date('d.m.Y');
       }
+
+      $date_for_link = isset($form['publication']['#value'])
+        ? $form['publication']['#value'] = date('d.m.Y')
+        : $url_query['publication'];
+
+      $date_for_link = substr($date_for_link, 6).
+            '-'.substr($date_for_link, 3, 2).
+            '-'.substr($date_for_link, 0, 2);
+
+      $themes_day = self::getLinksNews($date_for_link);
+      self::addFormListThemesDay($form, $themes_day);
 
       foreach ($tags as $tag) {
         $class_active = '';
@@ -72,6 +84,22 @@ class AllMaterialsFilter {
       ];
     }
 
+    public static function addFormListThemesDay(&$form, $items) {
+      $form['links'] = [];
+      $options = [''=>'--Все--'];
+
+      foreach ($items as $item) {
+        $options[$item->link_to_news] = $item->title;
+      }
+
+      $form['links'] = [
+        '#title' => 'Тема дня:',
+        '#type' => 'select',
+        '#default_value' => '',
+        '#options' => $options
+      ];
+    }
+
     public static function getTags() {
       $q = \Drupal::database()->select('node__field_tags', 'tags');
       $q->fields('tags', ['field_tags_value']);
@@ -81,6 +109,16 @@ class AllMaterialsFilter {
     public static function getSpeakers() {
       $q = \Drupal::database()->select('node__field_speaker', 'speaker');
       $q->fields('speaker', ['field_speaker_value']);
+      return $q->distinct()->execute()->fetchAll();
+    }
+
+    public static function getLinksNews($date) {
+      $q = \Drupal::database()->select('node__field_link_to_news', 'link');
+      $q->join('node_field_data', 'node', 'node.nid = link.field_link_to_news_target_id');
+      $q->join('node__field_date_publication', 'date', 'date.entity_id = link.entity_id');
+      $q->condition('date.field_date_publication_value', $date);
+      $q->addField('link', 'field_link_to_news_target_id', 'link_to_news');
+      $q->fields('node', ['title']);
       return $q->distinct()->execute()->fetchAll();
     }
 
