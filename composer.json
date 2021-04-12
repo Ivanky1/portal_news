@@ -16,6 +16,7 @@
     ],
     "require": {
         "composer/installers": "^1.9",
+        "cweagans/composer-patches": "^1.7",
         "drupal/admin_toolbar": "^3.0",
         "drupal/better_exposed_filters": "^5.0@beta",
         "drupal/ckeditor_codemirror": "^2.3",
@@ -42,7 +43,14 @@
     "config": {
         "sort-packages": true
     },
+
     "extra": {
+        "enable-patching": true,
+        "patches": {
+            "drupal/core": {
+                "Grouped exposed taxonomy term filters do not work": "patches/taxonomy_views.patch"
+            }
+        },
         "drupal-scaffold": {
             "locations": {
                 "web-root": "public_html/"
@@ -98,5 +106,6 @@
                 "      composer remove drupal/core-project-message"
             ]
         }
+
     }
 }
