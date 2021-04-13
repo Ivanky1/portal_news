@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\node\NodeInterface;
+
 /**
  * Implements hook_theme().
  */
@@ -19,11 +21,31 @@ function form_exposed_views_custom_theme($existing, $type, $theme, $path) {
  * @param $form_id
  */
 function form_exposed_views_custom_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+    $form_ids = ['node-news-edit-form', 'node-news-form'];
+
     if ($form['#id'] == 'views-exposed-form-all-materials-block-1') {
         $current_uri = \Drupal::request()->getRequestUri();
         Drupal\form_exposed_views_custom\AllMaterialsFilter::getFilter($form, $current_uri);
+    } elseif(in_array($form['#id'], $form_ids)) {
+        $form['#validate'][] = 'validate_news_material';
     }
 }
+
+function validate_news_material(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $data = $form_state->getValues();
+  $is_condition = $data['field_link_to_news'][0]['target_id'] == '';
+
+  if ($form['#id'] == 'node-news-form') {
+    $is_condition = $is_condition && $data['field_type_material'][0]['target_id'] != 1;
+  }
+
+  if ($is_condition) {
+    $form_state->setErrorByName('field_link_to_news', 'Поле Тема дня не может быть пустым');
+  }
+
+}
+
+
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -31,4 +53,14 @@ function form_exposed_views_custom_form_alter(&$form, \Drupal\Core\Form\FormStat
 function form_exposed_views_custom_preprocess_page(&$variables) {
     $uri_without_query_string = \Drupal::request()->getPathInfo();
     $variables['#attached']['library'][] = 'form_exposed_views_custom/form_filter';
+}
+
+function form_exposed_views_custom_node_insert(NodeInterface $node) {
+    $is_news = isset($node->field_type_material->target_id)
+      && $node->field_type_material->target_id == '1';
+
+    if ($node->getType() == 'news' && $is_news) {
+      $node->set('field_link_to_news', $node->nid->value);
+      $node->save();
+    }
 }
