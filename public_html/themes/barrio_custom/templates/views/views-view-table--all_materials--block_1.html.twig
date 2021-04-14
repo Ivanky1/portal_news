@@ -1,73 +1,79 @@
-{# variable divisions_all -- this is module vacancy_extensions_view   #}
-
-{% set type_matrials_obj = {
-  '1': 'Новости',
-  '2': 'История успеха',
-  '3': 'Цитаты',
-  '4': 'Соц. сети'
-} %}
-
-{% set type_materials_with_data = {} %}
-
-{% for row in rows %}
-  {% set type = row.columns.field_type_material.content[0]['field_output']["#markup"]|striptags|trim %}
-
-  {% set items = {
-    title: row.columns.title.content[0]['field_output']["#markup"],
-    sub_title: row.columns.field_sub_title.content[0]['field_output']["#markup"],
-    body: row.columns.body.content[0]['field_output']["#markup"],
-    img_src: row.columns.field_img_news.content[0]['field_output']["#markup"]|striptags|trim,
-    nid: row.columns.nid.content[0]['field_output']["#markup"]|striptags|trim,
-    type: type_matrials_obj[type],
-    lead: row.columns.field_lead.content[0]['field_output']["#markup"]|striptags|trim,
-    tags: row.columns.field_tags.content[0]['field_output']["#markup"]|striptags|trim
-  }
-  %}
-
-  {% if not attribute(type_materials_with_data,  items.type ) is defined %}
-    {% set type_materials_with_data = type_materials_with_data|merge({ (items.type) : [items] }) %}
-  {% else %}
-    {% set type_material_key = attribute(type_materials_with_data, items.type) %}
-    {% set type_material_key = type_material_key|merge([items]) %}
-    {% set type_materials_with_data = type_materials_with_data|merge({ (items.type) : type_material_key }) %}
-  {% endif %}
-
-{% endfor %}
-
-{% set href = "javascript:void(0)" %}
-
 <div class="row">
-{% for key, items in type_materials_with_data %}
 
-  <div class="col-md-4">
-  <div class="col-md-12 nopadding">
-    <h3>{{ key }}</h3>
-  </div>
-  <div class="logos">
-    {% for item in items %}
-        <div class="item item-left row">
-          <div class="col-md-5 nopadding hidden-xs">
-            <img src="{{ item.img_src }}" alt="">
-            <span class="img-overflow"></span>
-            <div class="arrow-left"></div>
-          </div>
+  {% for row in rows %}
+    {% set type = row.columns.field_type_material.content[0]['field_output']["#markup"]|striptags|trim %}
 
-          <div class="col-md-7 nopadding">
-            <div class="content">
-              <p class="date">{{ item.date_publication }}</p>
-              <h2>{{ item.title }} </h2>
+    {% set item = {
+      title: row.columns.title.content[0]['field_output']["#markup"],
+      sub_title: row.columns.field_sub_title.content[0]['field_output']["#markup"],
+      body: row.columns.body.content[0]['field_output']["#markup"],
+      img_src: row.columns.field_img_news.content[0]['field_output']["#markup"]|striptags|trim,
+      nid: row.columns.nid.content[0]['field_output']["#markup"]|striptags|trim,
+      lead: row.columns.field_lead.content[0]['field_output']["#markup"]|striptags|trim,
+      tags: row.columns.field_tags.content[0]['field_output']["#markup"]|striptags|trim,
+      theme_link : row.columns.field_link_to_news.content[0]['field_output']["#markup"]|striptags|trim,
+      social : row.columns.field_social_network.content[0]['field_output']["#markup"]|striptags|trim
+    }
+    %}
+
+    <div class="col-md-6 border mb-3">
+      <div class="item item-left row">
+        <div class="col-md-5 nopadding hidden-xs">
+          <img src="{{ item.img_src }}" />
+          <span class="img-overflow"></span>
+          <div class="arrow-left"></div>
+        </div>
+
+        <div class="col-md-7 nopadding">
+          <div class="content">
+            <p class="date">{{ item.date_publication }}</p>
+            <h3>{{ row.columns.field_type_material.content }}</h3>
+            <h2>{{ item.title }} </h2>
+            <strong>{{ row.columns.field_date_publication.content }}</strong>
+            {% if item.sub_title != '' %}
               <p>{{ item.sub_title }}</p>
-              <p><strong>{{ item.lead  }}</strong></p>
-              <p>{{ item.body  }}</p>
+            {% endif %}
+
+            {% if item.social  != '' %}
+              <p><strong>{{ item.social  }}</strong></p>
+            {% endif %}
+
+            {% if item.lead != '' %}
+              <p><strong>Лид: {{ item.lead  }}</strong></p>
+            {% endif %}
+
+            <p>{{ body  }}</p>
+
+
+            {% if item.tags != '' %}
               <p>Тэги: {{ item.tags }}</p>
-            </div>
+            {% endif %}
+
+            <p><strong>Тема дня: {{ row.columns.field_link_to_news.content  }}</strong></p>
+
+            {% if item.nid in quotes_all|keys %}
+              <p>Ключевые цитаты</p>
+
+              {% for quote in quotes_all[item.nid] %}
+
+                <p><i>{{ quote.date}}</i></p>
+                {{ quote.body|raw}}
+                <p>
+                  <i>Тэги: {{ quote.tags}} </i><br/>
+                  <i>Спикер: {{ quote.speaker}} </i>
+                </p>
+
+              {% endfor %}
+
+            {% endif %}
+
           </div>
         </div>
-    {% endfor %}
+      </div>
+    </div>
 
-  </div>
+
+  {% endfor %}
 
 </div>
-{% endfor %}
 
-</div>

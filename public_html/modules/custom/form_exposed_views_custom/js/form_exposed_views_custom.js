@@ -12,7 +12,7 @@
           })
 
           $('#views-exposed-form-all-materials-block-1').once('all-materials-active').each(function (i) {
-            $(this).find('#edit-reset').click(function (e) {
+            $(this).find('[data-drupal-selector="edit-reset"]').click(function (e) {
               e.preventDefault()
               location.href = '/'
             })
@@ -20,4 +20,4 @@
 
         }
     }
-}(jQuery, Drupal, drupalSettings));
+} (jQuery, Drupal, drupalSettings));

@@ -3,10 +3,12 @@
 namespace Drupal\form_exposed_views_custom;
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\form_exposed_views_custom\BaseDataFilter;
 
 class AllMaterialsFilter {
-
+  /**
+   * @param $form
+   * @param $current_uri
+   */
     public static function getFilter(&$form, $current_uri) {
       $form['#action'] = '';
       $form['publication']['#attributes']['autocomplete'] = 'off';
@@ -24,16 +26,7 @@ class AllMaterialsFilter {
         $form['publication']['#value'] = date('d.m.Y');
       }
 
-    /*  $date_for_link = isset($form['publication']['#value'])
-        ? $form['publication']['#value'] = date('d.m.Y')
-        : $url_query['publication'];
-
-      $date_for_link = substr($date_for_link, 6).
-            '-'.substr($date_for_link, 3, 2).
-            '-'.substr($date_for_link, 0, 2);*/
-
       $date_for_link = '';
-
       $themes_day = self::getLinksNews($date_for_link);
 
       self::addFormListThemesDay($form, $themes_day);
@@ -71,6 +64,9 @@ class AllMaterialsFilter {
       $form['#cache']['max-age'] = 0;
     }
 
+  /**
+   * @param $form
+   */
     public static function addFormListSpeaker(&$form) {
       $items = self::getSpeakers();
       $form['speaker'] = [];
@@ -88,6 +84,10 @@ class AllMaterialsFilter {
       ];
     }
 
+  /**
+   * @param $form
+   * @param $items
+   */
     public static function addFormListThemesDay(&$form, $items) {
       $form['links'] = [];
       $options = [''=>'--Все--'];
@@ -104,8 +104,13 @@ class AllMaterialsFilter {
       ];
     }
 
+  /**
+   * @return array
+   */
     public static function getTagsAll() {
       $q = \Drupal::database()->select('node__field_tags', 'tags');
+      $q->join('node__field_type_material', 'type', 'type.entity_id = tags.entity_id');
+      $q->condition('type.field_type_material_target_id', [3], 'not in');
       $q->fields('tags', ['field_tags_value']);
       $obj_tags = $q->distinct()->execute()->fetchAll();
       $tags_value = [];
@@ -129,12 +134,19 @@ class AllMaterialsFilter {
       return $tags_all;
     }
 
+  /**
+   * @return mixed
+   */
     public static function getSpeakers() {
       $q = \Drupal::database()->select('node__field_speaker', 'speaker');
       $q->fields('speaker', ['field_speaker_value']);
       return $q->distinct()->execute()->fetchAll();
     }
 
+  /**
+   * @param string $date
+   * @return mixed
+   */
     public static function getLinksNews($date = '') {
       $q = \Drupal::database()->select('node__field_link_to_news', 'link');
       $q->join('node_field_data', 'node', 'node.nid = link.field_link_to_news_target_id');

@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\node\NodeInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_theme().
@@ -20,7 +21,7 @@ function form_exposed_views_custom_theme($existing, $type, $theme, $path) {
  * @param Drupal\Core\Form\FormStateInterface $form_state
  * @param $form_id
  */
-function form_exposed_views_custom_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+function form_exposed_views_custom_form_alter(&$form, FormStateInterface $form_state, $form_id) {
     $form_ids = ['node-news-edit-form', 'node-news-form'];
 
     if ($form['#id'] == 'views-exposed-form-all-materials-block-1') {
@@ -31,12 +32,17 @@ function form_exposed_views_custom_form_alter(&$form, \Drupal\Core\Form\FormStat
     }
 }
 
-function validate_news_material(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+/**
+ * @param $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ */
+function validate_news_material(&$form, FormStateInterface $form_state) {
   $data = $form_state->getValues();
   $is_condition = $data['field_link_to_news'][0]['target_id'] == '';
 
   if ($form['#id'] == 'node-news-form') {
-    $is_condition = $is_condition && $data['field_type_material'][0]['target_id'] != 1;
+    $is_condition = $is_condition && $data['field_type_material'][0]['target_id'] != 1
+      && $data['field_type_material'][0]['target_id'] != 2;
   }
 
   if ($is_condition) {
@@ -44,23 +50,75 @@ function validate_news_material(&$form, \Drupal\Core\Form\FormStateInterface $fo
   }
 
 }
-
-
-
 /**
  * Implements hook_preprocess_HOOK().
  */
 function form_exposed_views_custom_preprocess_page(&$variables) {
-    $uri_without_query_string = \Drupal::request()->getPathInfo();
-    $variables['#attached']['library'][] = 'form_exposed_views_custom/form_filter';
+    if (\Drupal::service('path.matcher')->isFrontPage()) {
+      $variables['#attached']['library'][] = 'form_exposed_views_custom/form_filter';
+    }
 }
 
+/**
+ * @param NodeInterface $node
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
 function form_exposed_views_custom_node_insert(NodeInterface $node) {
     $is_news = isset($node->field_type_material->target_id)
-      && $node->field_type_material->target_id == '1';
+      && (
+        $node->field_type_material->target_id == '1'
+        || $node->field_type_material->target_id == '2'
+      );
 
     if ($node->getType() == 'news' && $is_news) {
       $node->set('field_link_to_news', $node->nid->value);
       $node->save();
     }
+}
+
+/**
+ * implements hook_preprocess_views_view_table
+ * @param $vars
+ */
+function form_exposed_views_custom_preprocess_views_view_table(&$vars) {
+  if ($vars['view']->id() == 'all_materials') {
+    \Drupal::service('page_cache_kill_switch')->trigger();
+    $vars['quotes_all'] = getNewsWithQuotes();
+  }
+}
+
+/**
+ * @return array
+ */
+function getNewsWithQuotes() {
+  $q = \Drupal::database()->select('node_field_data', 'n');
+  $q->join('node__field_type_material', 'type', 'type.entity_id = n.nid');
+  $q->join('node__field_link_to_news', 'link', 'link.entity_id = n.nid');
+  $q->leftJoin('node__field_date_publication	', 'date', 'date.entity_id = n.nid');
+  $q->leftJoin('node__body', 'body', 'body.entity_id = n.nid');
+  $q->leftJoin('node__field_tags', 'tags', 'tags.entity_id = n.nid');
+  $q->leftJoin('node__field_speaker', 'speaker', 'speaker.entity_id = n.nid');
+  $q->condition('type.field_type_material_target_id', 3);
+  $q->fields('n', ['nid']);
+  $q->fields('link', ['field_link_to_news_target_id']);
+  $q->fields('date', ['field_date_publication_value']);
+  $q->fields('body', ['body_value']);
+  $q->fields('tags', ['field_tags_value']);
+  $q->fields('speaker', ['field_speaker_value']);
+  $result = $q->execute()->fetchAll();
+  $news_with_quotes = [];
+
+  foreach ($result as $r) {
+    $news_with_quotes[$r->field_link_to_news_target_id][] =[
+      'nid' => $r->nid,
+      'date' => substr($r->field_date_publication_value, 8).
+          '.'.substr($r->field_date_publication_value, 5,2).
+          '.'.substr($r->field_date_publication_value, 0,4),
+      'body' => $r->body_value,
+      'tags' => $r->field_tags_value,
+      'speaker' => $r->field_speaker_value,
+    ];
+  }
+
+  return $news_with_quotes;
 }
