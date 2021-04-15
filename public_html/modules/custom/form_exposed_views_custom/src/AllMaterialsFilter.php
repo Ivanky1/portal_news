@@ -51,6 +51,15 @@ class AllMaterialsFilter {
         $basic_items .= t($string, $options);
       }
 
+      if ($url_parser['path'] == '/node/14') {
+        $form['link_type']['#markup'] = '<a href="/">Новости и история успеха</a>';
+        $form['types'] = [
+          '#markup' => ''
+        ];
+      } else {
+        $form['link_type']['#markup'] = '<a href="/node/14">Цитаты</a>';
+      }
+
       $content = [
         '#markup' => '<div class="tags"><h2>Тэги:</h2>' . $basic_items . '</div>',
       ];
@@ -108,9 +117,16 @@ class AllMaterialsFilter {
    * @return array
    */
     public static function getTagsAll() {
-      $q = \Drupal::database()->select('node__field_tags', 'tags');
-      $q->join('node__field_type_material', 'type', 'type.entity_id = tags.entity_id');
-      $q->condition('type.field_type_material_target_id', [3], 'not in');
+      $current_uri = \Drupal::request()->getRequestUri();
+
+      if (strstr($current_uri, '/node/14')) {
+        $type = 'quote';
+      } else {
+        $type = 'news';
+      }
+      $q = \Drupal::database()->select('node_field_data', 'n');
+      $q->join('node__field_tags', 'tags', 'tags.entity_id = n.nid');
+      $q->condition('n.type', $type);
       $q->fields('tags', ['field_tags_value']);
       $obj_tags = $q->distinct()->execute()->fetchAll();
       $tags_value = [];

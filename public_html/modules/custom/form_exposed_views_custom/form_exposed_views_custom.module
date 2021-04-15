@@ -55,8 +55,9 @@ function validate_news_material(&$form, FormStateInterface $form_state) {
  */
 function form_exposed_views_custom_preprocess_page(&$variables) {
     if (\Drupal::service('path.matcher')->isFrontPage()) {
-      $variables['#attached']['library'][] = 'form_exposed_views_custom/form_filter';
+
     }
+  $variables['#attached']['library'][] = 'form_exposed_views_custom/form_filter';
 }
 
 /**
@@ -83,42 +84,79 @@ function form_exposed_views_custom_node_insert(NodeInterface $node) {
 function form_exposed_views_custom_preprocess_views_view_table(&$vars) {
   if ($vars['view']->id() == 'all_materials') {
     \Drupal::service('page_cache_kill_switch')->trigger();
-    $vars['quotes_all'] = getNewsWithQuotes();
+    $vars['quotes_all'] = getNewsWithData('quote');
+    $vars['social_all'] = getNewsWithData('material_social');
   }
 }
 
 /**
  * @return array
  */
-function getNewsWithQuotes() {
+function getNewsWithData($type) {
   $q = \Drupal::database()->select('node_field_data', 'n');
-  $q->join('node__field_type_material', 'type', 'type.entity_id = n.nid');
   $q->join('node__field_link_to_news', 'link', 'link.entity_id = n.nid');
   $q->leftJoin('node__field_date_publication	', 'date', 'date.entity_id = n.nid');
   $q->leftJoin('node__body', 'body', 'body.entity_id = n.nid');
   $q->leftJoin('node__field_tags', 'tags', 'tags.entity_id = n.nid');
   $q->leftJoin('node__field_speaker', 'speaker', 'speaker.entity_id = n.nid');
-  $q->condition('type.field_type_material_target_id', 3);
-  $q->fields('n', ['nid']);
+  $q->condition('n.type', $type);
+
+  if ($type == 'material_social') {
+    $q->leftJoin('node__field_img_news', 'img', 'img.entity_id = n.nid');
+    $q->leftJoin('file_managed', 'file', 'file.fid = img.field_img_news_target_id');
+    $q->join('node__field_social_network', 'social', 'social.entity_id = n.nid');
+
+    $q->fields('file', ['uri']);
+    $q->fields('social', ['field_social_network_value']);
+  }
+
+  $q->fields('n', ['nid', 'title']);
   $q->fields('link', ['field_link_to_news_target_id']);
   $q->fields('date', ['field_date_publication_value']);
   $q->fields('body', ['body_value']);
   $q->fields('tags', ['field_tags_value']);
   $q->fields('speaker', ['field_speaker_value']);
   $result = $q->execute()->fetchAll();
-  $news_with_quotes = [];
+
+  return getDataOfType($result, $type);
+}
+
+/**
+ * @param $result
+ * @param $type
+ * @return array
+ */
+function getDataOfType($result, $type) {
+  $news_with_data = [];
 
   foreach ($result as $r) {
-    $news_with_quotes[$r->field_link_to_news_target_id][] =[
+    $url_alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/'. $r->nid, 'ru');
+
+    $data = [
       'nid' => $r->nid,
       'date' => substr($r->field_date_publication_value, 8).
-          '.'.substr($r->field_date_publication_value, 5,2).
-          '.'.substr($r->field_date_publication_value, 0,4),
+        '.'.substr($r->field_date_publication_value, 5,2).
+        '.'.substr($r->field_date_publication_value, 0,4),
       'body' => $r->body_value,
       'tags' => $r->field_tags_value,
       'speaker' => $r->field_speaker_value,
+      'title' => '<a href="'.$url_alias.'">'.$r->title.'</a>',
     ];
+
+     if ($type == 'material_social') {
+       $img_data = [
+         '#theme' => 'image_style',
+         '#style_name' => 'medium',
+         '#uri' => $r->uri,
+       ];
+
+       $data['img'] = render($img_data);
+       $data['network'] = $r->field_social_network_value;
+     }
+
+    $news_with_data[$r->field_link_to_news_target_id][] = $data;
   }
 
-  return $news_with_quotes;
+  return $news_with_data;
+
 }

@@ -16,7 +16,23 @@
               e.preventDefault()
               location.href = '/'
             })
+
+            /*$('[data-drupal-selector="edit-submit-all-materials').click(function (e) {
+              var option_selected = $('[data-drupal-selector="edit-types"] option:selected').val()
+
+              if (location.pathname == '/node/14' && option_selected != 3) {
+                e.preventDefault()
+                location.href = '/?types='+option_selected
+              } else  if (option_selected == 3) {
+                e.preventDefault()
+                location.href = '/node/14'
+              }
+
+            })*/
+
           })
+
+
 
         }
     }
