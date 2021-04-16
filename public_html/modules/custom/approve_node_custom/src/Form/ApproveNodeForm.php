@@ -68,7 +68,7 @@ class ApproveNodeForm extends FormBase {
           '#id' => 'submit-bookmark',
           '#type' => 'submit',
           '#name' => 'submit',
-          '#value' => 'Отправить',
+          '#value' => 'Согласовать',
           '#ajax' => [
             'callback' => '::ajaxSubmitCallback',
             'event' => 'click',
