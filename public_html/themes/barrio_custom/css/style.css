@@ -99,3 +99,21 @@ img {
   background: #32b8da;
   border-color: #32b8da;
 }
+
+.approve-node-form {
+  display: flex;
+  justify-content: flex-end;
+  gap: 30px;
+}
+
+.approve-node-form .success-add {
+  margin-top: 10px;
+}
+
+.approve-node-form .no {
+  color:#ff0000;
+}
+
+.approve-node-form .yes {
+  color: #79db0e;
+}

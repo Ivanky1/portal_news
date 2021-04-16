@@ -1,5 +1,5 @@
-name: bookmark
-description: Bookmark block
+name: Approve node custom
+description: Approve node block
 core_version_requirement: ^8.8 || ^9
 type: module
 dependencies:

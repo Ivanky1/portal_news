@@ -1,51 +1,46 @@
 <?php
 
-namespace Drupal\bookmark\Plugin\Block;
+namespace Drupal\approve_node_custom\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\user\Entity\User;
-use Drupal\config_family\IWConfigController;
+use Drupal\node\Entity\Node;
 
 /**
- * Provides a 'bookmark custom' Block.
+ * Provides a 'approve node custom' Block.
  *
  * @Block(
- *   id = "bookmark_custom_block",
- *   admin_label = @Translation("Блок закладки"),
- *   category = @Translation("bookmark custom block"),
+ *   id = "approve_node_custom_block",
+ *   admin_label = @Translation("Согласовать блок в нодах"),
+ *   category = @Translation("approve node custom block"),
  * )
  */
-class BookmarkBlock extends BlockBase {
+class ApproveNodeBlock extends BlockBase {
 
     /**
      * {@inheritdoc}
      */
     public function build() {
-        $build['#cache']['max-age'] = 1;
-
+        $build = [];
+        $build['#cache']['max-age'] = 0;
         $current_path = \Drupal::service('path.current')->getPath();
         $args = explode('/', $current_path);
-        $uid = \Drupal::currentUser()->id();
 
         if (!is_numeric($args[2]) || isset($args[3])) {
-            return [];
+          return $build;
+        }
+
+        $node = Node::load($args[2]);
+
+        if (!isset($node->field_is_approve)) {
+          return $build;
         }
 
         if ($args[1] == 'node') {
-            $build[] = \Drupal::formBuilder()->getForm('Drupal\bookmark\Form\BookmarkForm');
+            $build[] = \Drupal::formBuilder()->getForm(
+              'Drupal\approve_node_custom\Form\ApproveNodeForm'
+            );
             return $build;
 
-        } elseif ($args[1] == 'user' && $uid == $args[2]) {
-            $uid = \Drupal::currentUser()->id();
-            $data = [
-                'url' => 'bookmark.render_list',
-                'params' => ['user' => $uid],
-                'text_link' => 'Посмотреть мои закладки',
-            ];
-            $link = IWConfigController::getUrlTransform($data);
-            $html = '<div class="view-bookmark">'.$link.'</div>';
-            $build['#markup'] = $html;
-            return $build;
         }
 
         return $build;

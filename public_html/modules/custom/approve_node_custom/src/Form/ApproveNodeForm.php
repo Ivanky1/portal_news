@@ -4,11 +4,10 @@
  * Contains \Drupal\form_modal_salesforce\Form\MiniModalForAllForm.
  */
 
-namespace Drupal\bookmark\Form;
+namespace Drupal\approve_node_custom\Form;
 
-use Drupal\config_family\IWConfigController;
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\FormBase;
 use \Drupal\node\Entity\Node;
@@ -19,84 +18,75 @@ use \Drupal\node\Entity\Node;
  *
  * @package Drupal\bookmark\Form
  */
-class BookmarkForm extends FormBase {
+class ApproveNodeForm extends FormBase {
 
     /**
      * {@inheritdoc}.
      */
     public function getFormId() {
-        return 'bookmark_form';
+        return 'approve_node_form';
+    }
+
+    /**
+     * @return string
+     */
+    public function getExplodePath() {
+      $current_path = \Drupal::service('path.current')->getPath();
+      $params = explode('/', $current_path);
+      return isset($params[2]) && !isset($params[3]) ? $params[2] : '';
     }
 
     /**
      * {@inheritdoc}.
      */
     public function buildForm(array $form, FormStateInterface $form_state) {
-        $nid = IWConfigController::getExplodePath();
+        $nid = $this->getExplodePath();
 
         if (!is_numeric($nid)) {
             return '';
         }
 
-        $uid = \Drupal::currentUser()->id();
-        $node = $this->getNidByNode($nid, $uid);
+        $node = Node::load($nid);
+        $form['#data_custom'] = [
+          'node_id' => $nid,
+          'value' => $node->field_is_approve->value,
+        ];
 
-        if (is_null($node['entity_id'])) {
-            $form['#data_custom'] = [
-                'node_id' => $nid,
-                'user_id' => $uid,
-            ];
-
-            $form['submit'] = [
-                '#id' => 'submit-bookmark',
-                '#type' => 'submit',
-                '#name' => 'submit',
-                '#value' => 'Добавить в закладки',
-                '#ajax' => [
-                    'callback' => '::ajaxSubmitCallback',
-                    'event' => 'click',
-                    'progress' => [
-                        'type' => 'throbber',
-                    ],
-                ],
-                '#attributes' => [
-                    'class' => [
-                        'btn-primary-gradient'
-                    ],
-                ],
-                '#prefix' => '<div id="bookmark-system-message">',
-                '#suffix' => '</div>',
-            ];
+        if ($node->field_is_approve->value == 1) {
+          $title = 'Согласовано';
+          $class_name = ' yes';
         } else {
-            $form['bookmark_exists'] = [
-                '#markup' => '<div class="success-add">Новость добавлена в закладки</div>'
-            ];
+          $title = 'Проект';
+          $class_name = ' no';
         }
+
+        $form['approve_description'] = [
+          '#markup' => '<div class="success-add'.$class_name.'">'.$title.'</div>'
+        ];
+
+        $form['submit'] = [
+          '#id' => 'submit-bookmark',
+          '#type' => 'submit',
+          '#name' => 'submit',
+          '#value' => 'Отправить',
+          '#ajax' => [
+            'callback' => '::ajaxSubmitCallback',
+            'event' => 'click',
+            'progress' => [
+              'type' => 'throbber',
+            ],
+          ],
+          '#attributes' => [
+            'class' => [
+              'btn-primary-gradient'
+            ],
+          ],
+          '#prefix' => '<div id="approve-system-message">',
+          '#suffix' => '</div>',
+        ];
 
         return $form;
     }
-
-    /**
-     * @param $table
-     * @param $nid
-     * @param string $uid
-     *
-     * @return int
-     */
-    protected function getCountLikesAndViewer($table, $nid, $uid = '') {
-        $id = abs($nid);
-        $query = \Drupal::database()->select($table, 'block');
-        $query->condition('block.node_nid', $id);
-
-        if ($uid != '') {
-            $query->condition('block.user_id', $uid);
-        }
-
-        $query->fields('block');
-        $result = $query->execute()->fetchAll();
-        return count($result);
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -106,48 +96,31 @@ class BookmarkForm extends FormBase {
      * AJAX callback handler that displays any errors or a success message.
      */
     public function ajaxSubmitCallback(array &$form, FormStateInterface $form_state) {
-        $response = new AjaxResponse();
+      $response = new AjaxResponse();
+      $title = $form['#data_custom']['value'] ? 'Проект' : 'Согласовано';
 
-        if ($form['#data_custom'] != '') {
-            $this->saveBookmark($form['#data_custom']);
-        }
+      if ($form['#data_custom']['value'] == 1) {
+        $form['#data_custom']['value'] = 0;
+        $class_name = ' no';
+      } else {
+        $form['#data_custom']['value'] = 1;
+        $class_name = ' yes';
+      }
 
-        $title = '<div class="success-add">Новость добавлена в закладки</div>';
-        $response->addCommand(new HtmlCommand('#bookmark-system-message', $title));
-        return $response;
+      $this->addValueApprove($form['#data_custom']);
+      $message = '<div class="success-add'.$class_name.'">'.$title.'</div>';
+      $response->addCommand(new ReplaceCommand('.success-add', $message));
+      return $response;
     }
 
-    /**
-     * @param $data
-     * @throws \Drupal\Core\Entity\EntityStorageException
-     */
-    public function saveBookmark($data) {
-        $node = Node::create([
-            'type' => 'bookmark',
-            'title' => 'Закладка - '.$data['node_id'].' Пользователь - '.$data['user_id'],
-            'field_link_to_node_bookmark' => [
-                'target_id' => $data['node_id']
-            ],
-            'field_link_to_user_bookmark' => [
-                'target_id' => $data['user_id']
-            ],
-        ]);
+  /**
+   * @param $data
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+    public function addValueApprove($data) {
+        $node = Node::load($data['node_id']) ;
+        $node->field_is_approve->value = $data['value'];
         $node->save();
     }
 
-    /**
-     * @param $nid
-     * @param $uid
-     *
-     * @return mixed
-     */
-    public function getNidByNode($nid, $uid) {
-        $q = \Drupal::database()->select('node__field_link_to_node_bookmark', 'link_node');
-        $q->join('node__field_link_to_user_bookmark', 'link_user', 'link_user.entity_id = link_node.entity_id');
-        $q->condition('link_node.field_link_to_node_bookmark_target_id', $nid);
-        $q->condition('link_user.field_link_to_user_bookmark_target_id', $uid);
-        $q->fields('link_node', ['field_link_to_node_bookmark_target_id']);
-        $q->fields('link_user', ['entity_id']);
-        return $q->execute()->fetchAssoc();
-    }
 }
