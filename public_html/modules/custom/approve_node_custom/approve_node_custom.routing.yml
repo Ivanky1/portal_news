@@ -1,0 +1,25 @@
+bookmark.render_list:
+  path: '/user/{user}/bookmarks'
+  defaults:
+    _controller: '\Drupal\bookmark\Controller\BookmarkController:runRender'
+    _title: 'Мои закладки'
+  requirements:
+    _custom_access: '\Drupal\bookmark\Controller\BookmarkController:accessBookmark'
+  options:
+      parameters:
+        user:
+          type: entity:user
+
+bookmark.delete_node:
+  path: '/user/{user}/bookmark/{node}/delete'
+  defaults:
+    _controller: '\Drupal\bookmark\Controller\BookmarkController:runDelete'
+    _title: 'Удалить закладку'
+  requirements:
+    _custom_access: '\Drupal\bookmark\Controller\BookmarkController:accessBookmark'
+  options:
+      parameters:
+        user:
+          type: entity:user
+        node:
+          type: entity:node
