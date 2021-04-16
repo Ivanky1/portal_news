@@ -15,7 +15,8 @@
       theme_link: row.columns.field_link_to_news.content[0]['field_output']["#markup"]|striptags|trim,
       social: row.columns.field_social_network.content[0]['field_output']["#markup"]|striptags|trim,
       speaker: row.columns.field_speaker.content[0]['field_output']["#markup"]|striptags|trim,
-      date_raw: row.columns.field_date_publication_1.content[0]['field_output']["#markup"]|striptags|trim
+      date_raw: row.columns.field_date_publication_1.content[0]['field_output']["#markup"]|striptags|trim,
+      is_approve: row.columns.field_is_approve.content[0]['field_output']["#markup"]|striptags|trim
     }
     %}
     <div class="col-md-6 border mb-3">
@@ -28,6 +29,11 @@
 
         <div class="col-md-7 nopadding">
           <div class="content">
+            {% if item.is_approve == 1 %}
+              <div class="yes t-a-r">Согласовано</div>
+            {% else %}
+              <div class="no t-a-r">Проект</div>
+            {% endif %}
             <h3>{{ row.columns.field_type_material.content }}</h3>
             <p class="date">{{ row.columns.field_date_publication.content }}</p>
             <h2>{{ item.title }} </h2>
@@ -57,12 +63,18 @@
               <p><strong>Ключевые цитаты</strong></p>
 
               {% for quote in quotes_all[item.nid] %}
+                {% if quote.is_approve == 1 %}
+                  <div class="yes t-a-r">Согласовано</div>
+                {% else %}
+                  <div class="no t-a-r">Проект</div>
+                {% endif %}
 
-                <p><i>{{ quote.date}}</i></p>
-                {{ quote.body|raw}}
+                <p><i>{{ quote.date }}</i></p>
+                <p>{{ quote.title|raw }}</p>
+                {{ quote.body|raw }}
                 <p>
-                  <i>Тэги: {{ quote.tags}} </i><br/>
-                  <i>Спикер: {{ quote.speaker}} </i>
+                  <i>Тэги: {{ quote.tags }} </i><br/>
+                  <i>Спикер: {{ quote.speaker }} </i>
                 </p>
 
               {% endfor %}
@@ -76,11 +88,18 @@
 
                 {% for quote in quotes_speaker[item.speaker] %}
                   {% if item.nid != quote.theme_id and item.date_raw > quote.date_raw %}
-                    <p><i>{{ quote.date}}</i></p>
+                    {% if quote.is_approve == 1 %}
+                      <div class="yes t-a-r">Согласовано</div>
+                    {% else %}
+                      <div class="no t-a-r">Проект</div>
+                    {% endif %}
+
+                    <p><i>{{ quote.date }}</i></p>
+                    <p>{{ quote.title|raw }}</p>
                     {{ quote.body|raw}}
                     <p>
-                      <i>Тэги: {{ quote.tags}} </i><br/>
-                      <i>Спикер: {{ quote.speaker}} </i>
+                      <i>Тэги: {{ quote.tags }} </i><br/>
+                      <i>Спикер: {{ quote.speaker }} </i>
                     </p>
                   {% endif %}
                 {% endfor %}
@@ -109,6 +128,11 @@
 
           <div class="col-md-7 nopadding">
             <div class="content">
+              {% if social.is_approve == 1 %}
+                <div class="yes t-a-r">Согласовано</div>
+              {% else %}
+                <div class="no t-a-r">Проект</div>
+              {% endif %}
               <p class="date">{{ social.date }}</p>
               <h2>{{ social.title|raw }} </h2>
               <p><strong>{{ social.network }}</strong></p>

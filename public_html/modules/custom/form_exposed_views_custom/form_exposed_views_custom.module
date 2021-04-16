@@ -77,6 +77,7 @@ function getNewsWithData($type) {
   $q->leftJoin('node__body', 'body', 'body.entity_id = n.nid');
   $q->leftJoin('node__field_tags', 'tags', 'tags.entity_id = n.nid');
   $q->leftJoin('node__field_speaker', 'speaker', 'speaker.entity_id = n.nid');
+  $q->leftJoin('node__field_is_approve', 'approve', 'approve.entity_id = n.nid');
   $q->condition('n.type', $type);
 
   if ($type == 'material_social') {
@@ -93,6 +94,7 @@ function getNewsWithData($type) {
   $q->fields('body', ['body_value']);
   $q->fields('tags', ['field_tags_value']);
   $q->fields('speaker', ['field_speaker_value']);
+  $q->fields('approve', ['field_is_approve_value']);
   return $q->execute()->fetchAll();
 }
 
@@ -118,6 +120,7 @@ function getDataOfType($result, $type, $relation = 'theme_id') {
       'speaker' => $r->field_speaker_value,
       'title' => '<a href="'.$url_alias.'">'.$r->title.'</a>',
       'theme_id' => $r->field_link_to_news_target_id,
+      'is_approve' => $r->field_is_approve_value,
     ];
 
      if ($type == 'material_social') {
@@ -141,7 +144,6 @@ function getDataOfType($result, $type, $relation = 'theme_id') {
   return $news_with_data;
 
 }
-
 
 /**
  * @return array

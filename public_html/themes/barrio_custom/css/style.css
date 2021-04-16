@@ -110,10 +110,13 @@ img {
   margin-top: 10px;
 }
 
-.approve-node-form .no {
+.no {
   color:#ff0000;
 }
+.yes {
+  color: #8ec73c;
+}
 
-.approve-node-form .yes {
-  color: #79db0e;
+.t-a-r {
+  text-align: right;
 }
