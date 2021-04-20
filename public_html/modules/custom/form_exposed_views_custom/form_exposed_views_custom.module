@@ -66,7 +66,8 @@ function form_exposed_views_custom_node_insert(NodeInterface $node) {
     if ($node->getType() == 'news') {
       $node->set('field_link_to_news', $node->nid->value);
       $node->save();
-    } elseif (in_array($node->getType(), ['material_social', 'quote'])) {
+    } elseif (in_array($node->getType(), ['material_social', 'quote']) ) {
+
       createNodeNews($node);
     }
 }
@@ -76,6 +77,14 @@ function form_exposed_views_custom_node_insert(NodeInterface $node) {
  * @throws \Drupal\Core\Entity\EntityStorageException
  */
 function createNodeNews($node) {
+    if (!isset($node->field_link_to_news)) {
+      return;
+    }
+
+    if ($node->field_link_to_news->target_id != '') {
+      return;
+    }
+
     $node_news = [
       'type' => 'news',
       'title' => $node->title->value,
