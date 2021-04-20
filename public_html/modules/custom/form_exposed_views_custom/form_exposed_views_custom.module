@@ -2,6 +2,8 @@
 
 use Drupal\node\NodeInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\Node;
+use Drupal\file\Entity\File;
 
 /**
  * Implements hook_theme().
@@ -22,12 +24,28 @@ function form_exposed_views_custom_theme($existing, $type, $theme, $path) {
  * @param $form_id
  */
 function form_exposed_views_custom_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+    $form_ids = ['node-material-social-form', 'node-quote-form'];
+
     if ($form['#id'] == 'views-exposed-form-all-materials-block-1') {
         $current_uri = \Drupal::request()->getRequestUri();
         Drupal\form_exposed_views_custom\AllMaterialsFilter::getFilter($form, $current_uri);
+    } elseif (in_array($form['#id'], $form_ids)) {
+        $form['field_link_to_news']['widget'][0]['target_id']['#default_value'] = getLastNews();
     }
 }
 
+/**
+ * @return \Drupal\Core\Entity\EntityBase|\Drupal\Core\Entity\EntityInterface|Node|null
+ */
+function getLastNews() {
+    $q = \Drupal::database()->select('node_field_data', 'n');
+    $q->fields('n', ['nid']);
+    $q->condition('n.type', 'news');
+    $q->orderBy('n.created', 'DESC');
+    $q->range(0, 1);
+    $nid = $q->execute()->fetchField();
+    return Node::load($nid);
+}
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -36,7 +54,8 @@ function form_exposed_views_custom_preprocess_page(&$variables) {
     if (\Drupal::service('path.matcher')->isFrontPage()) {
 
     }
-  $variables['#attached']['library'][] = 'form_exposed_views_custom/form_filter';
+
+    $variables['#attached']['library'][] = 'form_exposed_views_custom/form_filter';
 }
 
 /**
@@ -47,7 +66,45 @@ function form_exposed_views_custom_node_insert(NodeInterface $node) {
     if ($node->getType() == 'news') {
       $node->set('field_link_to_news', $node->nid->value);
       $node->save();
+    } elseif (in_array($node->getType(), ['material_social', 'quote'])) {
+      createNodeNews($node);
     }
+}
+
+/**
+ * @param $node
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function createNodeNews($node) {
+    $node_news = [
+      'type' => 'news',
+      'title' => $node->title->value,
+      'body' => [
+        'value' => $node->body->value,
+        'format' => 'full_html',
+      ],
+      'field_date_publication' => $node->field_date_publication->value,
+      'field_speaker' => $node->field_speaker->value,
+      'field_tags' => $node->field_tags->value,
+      'field_type_material' => [
+        'target_id' => 1,
+      ]
+    ];
+
+    if (isset($node->field_img_news) && isset($node->field_img_news->target_id)) {
+      $file = File::load($node->field_img_news->target_id);
+      $file_new = file_copy($file, $file->getFileUri());
+      $node_news['field_img_news'] = [
+        'target_id' => $file_new->id()
+      ];
+    }
+
+    $node_news = Node::create($node_news);
+    $node_news->save();
+    $node_news->set('field_link_to_news', $node->nid->value);
+    $node_news->save();
+    $node->set('field_link_to_news', $node->nid->value);
+    $node->save();
 }
 
 /**
@@ -55,102 +112,93 @@ function form_exposed_views_custom_node_insert(NodeInterface $node) {
  * @param $vars
  */
 function form_exposed_views_custom_preprocess_views_view_table(&$vars) {
-  if ($vars['view']->id() == 'all_materials') {
-    \Drupal::service('page_cache_kill_switch')->trigger();
-    $result_quote = getNewsWithData('quote');
-    $vars['quotes_all'] = getDataOfType($result_quote, 'quote');
+    if ($vars['view']->id() == 'all_materials') {
+      \Drupal::service('page_cache_kill_switch')->trigger();
+      $result_quote = getNewsWithData('quote');
+      $vars['quotes_all'] = getDataOfType($result_quote, 'quote');
 
-    $result = getNewsWithData('material_social');
-    $vars['social_all'] = getDataOfType($result, 'material_social');
+      $result = getNewsWithData('material_social');
+      $vars['social_all'] = getDataOfType($result, 'material_social');
 
-    $vars['quotes_speaker'] = getDataOfType($result_quote, 'quote', 'speaker');
-  }
+      $vars['quotes_speaker'] = getDataOfType($result_quote, 'quote', 'speaker');
+    }
 }
 
 /**
  * @return array
  */
 function getNewsWithData($type) {
-  $q = \Drupal::database()->select('node_field_data', 'n');
-  $q->join('node__field_link_to_news', 'link', 'link.entity_id = n.nid');
-  $q->leftJoin('node__field_date_publication	', 'date', 'date.entity_id = n.nid');
-  $q->leftJoin('node__body', 'body', 'body.entity_id = n.nid');
-  $q->leftJoin('node__field_tags', 'tags', 'tags.entity_id = n.nid');
-  $q->leftJoin('node__field_speaker', 'speaker', 'speaker.entity_id = n.nid');
-  $q->leftJoin('node__field_is_approve', 'approve', 'approve.entity_id = n.nid');
-  $q->condition('n.type', $type);
+    $q = \Drupal::database()->select('node_field_data', 'n');
+    $q->join('node__field_link_to_news', 'link', 'link.entity_id = n.nid');
+    $q->leftJoin('node__field_date_publication	', 'date', 'date.entity_id = n.nid');
+    $q->leftJoin('node__body', 'body', 'body.entity_id = n.nid');
+    $q->leftJoin('node__field_tags', 'tags', 'tags.entity_id = n.nid');
+    $q->leftJoin('node__field_speaker', 'speaker', 'speaker.entity_id = n.nid');
+    $q->leftJoin('node__field_is_approve', 'approve', 'approve.entity_id = n.nid');
+    $q->condition('n.type', $type);
 
-  if ($type == 'material_social') {
-    $q->leftJoin('node__field_img_news', 'img', 'img.entity_id = n.nid');
-    $q->leftJoin('file_managed', 'file', 'file.fid = img.field_img_news_target_id');
-    $q->join('node__field_social_network', 'social', 'social.entity_id = n.nid');
-    $q->fields('file', ['uri']);
-    $q->fields('social', ['field_social_network_value']);
-  }
+    if ($type == 'material_social') {
+      $q->leftJoin('node__field_img_news', 'img', 'img.entity_id = n.nid');
+      $q->leftJoin('file_managed', 'file', 'file.fid = img.field_img_news_target_id');
+      $q->join('node__field_social_network', 'social', 'social.entity_id = n.nid');
+      $q->fields('file', ['uri']);
+      $q->fields('social', ['field_social_network_value']);
+    }
 
-  $q->fields('n', ['nid', 'title']);
-  $q->fields('link', ['field_link_to_news_target_id']);
-  $q->fields('date', ['field_date_publication_value']);
-  $q->fields('body', ['body_value']);
-  $q->fields('tags', ['field_tags_value']);
-  $q->fields('speaker', ['field_speaker_value']);
-  $q->fields('approve', ['field_is_approve_value']);
-  return $q->execute()->fetchAll();
+    $q->fields('n', ['nid', 'title']);
+    $q->fields('link', ['field_link_to_news_target_id']);
+    $q->fields('date', ['field_date_publication_value']);
+    $q->fields('body', ['body_value']);
+    $q->fields('tags', ['field_tags_value']);
+    $q->fields('speaker', ['field_speaker_value']);
+    $q->fields('approve', ['field_is_approve_value']);
+    return $q->execute()->fetchAll();
 }
 
 /**
  * @param $result
  * @param $type
+ * @param string $relation
  * @return array
  */
 function getDataOfType($result, $type, $relation = 'theme_id') {
-  $news_with_data = [];
+    $news_with_data = [];
 
-  foreach ($result as $r) {
-    $url_alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/'. $r->nid, 'ru');
+    foreach ($result as $r) {
+      $url_alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/'. $r->nid, 'ru');
 
-    $data = [
-      'nid' => $r->nid,
-      'date_raw' => $r->field_date_publication_value,
-      'date' => substr($r->field_date_publication_value, 8).
-        '.'.substr($r->field_date_publication_value, 5,2).
-        '.'.substr($r->field_date_publication_value, 0,4),
-      'body' => $r->body_value,
-      'tags' => $r->field_tags_value,
-      'speaker' => $r->field_speaker_value,
-      'title' => '<a href="'.$url_alias.'">'.$r->title.'</a>',
-      'theme_id' => $r->field_link_to_news_target_id,
-      'is_approve' => $r->field_is_approve_value,
-    ];
+      $data = [
+        'nid' => $r->nid,
+        'date_raw' => $r->field_date_publication_value,
+        'date' => substr($r->field_date_publication_value, 8).
+          '.'.substr($r->field_date_publication_value, 5,2).
+          '.'.substr($r->field_date_publication_value, 0,4),
+        'body' => $r->body_value,
+        'tags' => $r->field_tags_value,
+        'speaker' => $r->field_speaker_value,
+        'title' => '<a href="'.$url_alias.'">'.$r->title.'</a>',
+        'theme_id' => $r->field_link_to_news_target_id,
+        'is_approve' => $r->field_is_approve_value,
+      ];
 
-     if ($type == 'material_social') {
-       $img_data = [
+      if ($type == 'material_social') {
+        $img_data = [
          '#theme' => 'image_style',
          '#style_name' => 'medium',
          '#uri' => $r->uri,
-       ];
+        ];
 
-       $data['img'] = render($img_data);
-       $data['network'] = $r->field_social_network_value;
-     }
+        $data['img'] = render($img_data);
+        $data['network'] = $r->field_social_network_value;
+      }
 
       if ($relation == 'theme_id') {
         $news_with_data[$r->field_link_to_news_target_id][] = $data;
-      } elseif($r->field_speaker_value != '') {
+      } elseif ($r->field_speaker_value != '') {
         $news_with_data[$r->field_speaker_value][] = $data;
       }
-  }
 
-  return $news_with_data;
+    }
 
-}
-
-/**
- * @return array
- */
-function getQuotesRelationNews() {
-  $q = \Drupal::database()->select('node_field_data', 'n');
-  $q->join('node__field_speaker', 'speaker', 'speaker.entity_id = n.nid');
-  $q->fields('speaker', ['field_speaker_value', 'entity_id']);
-  return $q->execute()->fetchAll();
+    return $news_with_data;
 }
