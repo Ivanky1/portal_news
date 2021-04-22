@@ -1,5 +1,5 @@
 .tags {
-  padding: 30px 20px;
+  padding: 10px 20px;
   width: 380px;
   /* Style for "jQuery" */
   font-family: Roboto;
@@ -78,4 +78,44 @@
   left: 50%;
   margin-left: -5px;
   transform: rotate(45deg)
+}
+
+.page-menu__scroll {
+  margin-top: -15px;
+}
+
+.page-menu__item {
+  position: relative;
+  text-align: center;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+.page-menu__link {
+  position: relative;
+  display: block;
+  height: 42px;
+  font-size: 0.86667rem;
+  font-weight: bold;
+  line-height: 50px;
+  white-space: nowrap;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #485156;
+}
+
+.page-menu__item.is-active .page-menu__link {
+  color: #0b820d;
+}
+.page-menu__item.is-active .page-menu__link::after {
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  content: '';
+  background-image: -webkit-gradient(linear,right top,left top,from(#0b8243),to(#005f2d));
+  background-image: -webkit-linear-gradient(right,#0b8243,#005f2d);
+  background-image: -o-linear-gradient(right,#0b8243,#005f2d);
+  background-image: linear-gradient(to left,#0b8243,#005f2d);
 }

@@ -1,0 +1,48 @@
+<div class="container">
+  <div class="row">
+
+    {% if node.field_img_news %}
+      <div class="col-md-4 col-12 mb-5">
+        {{ content.field_img_news }}
+      </div>
+    {% endif %}
+
+    {% if node.field_img_news %}
+      <div class="col-md-8 col-12 mb-5">
+    {% else %}
+      <div class="col-12 mb-5">
+    {% endif %}
+        {{ content.field_link_to_news }}
+
+      {% if node.field_date_publication.value %}
+        <div>Дата публикации: {{ node.field_date_publication.value|trim }}</div>
+      {% endif %}
+
+      {% if node.field_social_network.value %}
+        <div><strong>{{ node.field_social_network.value|trim }}</strong></div>
+      {% endif %}
+
+      {% if node.field_sub_title.value %}
+        <div>{{ node.field_sub_title.value|trim }}</div>
+      {% endif %}
+
+      {% if node.body.value %}
+        {{ content.body }}
+      {% endif %}
+
+      {% if node.field_lead.value %}
+        <div>Лид: {{ node.field_lead.value|trim }}</div>
+      {% endif %}
+
+      {% if node.field_speaker.value %}
+        <div>Спикер: {{ node.field_speaker.value|trim }}</div>
+      {% endif %}
+
+      {% if node.field_tags.value %}
+        <div>Тэги: {{ node.field_tags.value }}
+      {% endif %}
+
+    </div>
+  </div>
+  </div>
+</div>

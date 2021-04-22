@@ -67,7 +67,6 @@ function form_exposed_views_custom_node_insert(NodeInterface $node) {
       $node->set('field_link_to_news', $node->nid->value);
       $node->save();
     } elseif (in_array($node->getType(), ['material_social', 'quote']) ) {
-
       createNodeNews($node);
     }
 }
