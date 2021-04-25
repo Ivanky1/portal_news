@@ -120,3 +120,11 @@ img {
 .t-a-r {
   text-align: right;
 }
+
+.node-preview-container {
+  padding: 20px;
+}
+
+.page-node-1 .breadcrumb {
+  display: none;
+}

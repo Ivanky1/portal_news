@@ -109,9 +109,9 @@ function createNodeNews($node) {
 
     $node_news = Node::create($node_news);
     $node_news->save();
-    $node_news->set('field_link_to_news', $node->nid->value);
+    $node_news->set('field_link_to_news', $node_news->nid->value);
     $node_news->save();
-    $node->set('field_link_to_news', $node->nid->value);
+    $node->set('field_link_to_news', $node_news->nid->value);
     $node->save();
 }
 
