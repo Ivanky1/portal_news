@@ -125,6 +125,10 @@ img {
   padding: 20px;
 }
 
-.page-node-1 .breadcrumb {
+.page-node-1 .breadcrumb, .page-node-14 .breadcrumb, .page-node-42 .breadcrumb {
   display: none;
+}
+
+.page-node-1 #content, .page-node-14 #content, .page-node-42 #content {
+  margin-top: 46px;
 }
