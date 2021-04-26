@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
@@ -31,6 +32,15 @@ function form_exposed_views_custom_form_alter(&$form, FormStateInterface $form_s
         Drupal\form_exposed_views_custom\AllMaterialsFilter::getFilter($form, $current_uri);
     } elseif (in_array($form['#id'], $form_ids)) {
         $form['field_link_to_news']['widget'][0]['target_id']['#default_value'] = getLastNews();
+    } elseif ($form['#id'] == 'node-news-form') {
+        $current_uri = \Drupal::request()->getRequestUri();
+        $url_parser = UrlHelper::parse($current_uri);
+        $query_params = $url_parser['query'];
+
+        if (isset($query_params['type']) && is_numeric($query_params['type']) && $query_params['type'] < 3) {
+            $form['field_type_material']['widget']['#default_value'][0] = $query_params['type'];
+        }
+
     }
 }
 

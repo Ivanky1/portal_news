@@ -119,3 +119,7 @@
   background-image: -o-linear-gradient(right,#0b8243,#005f2d);
   background-image: linear-gradient(to left,#0b8243,#005f2d);
 }
+
+.field--name-field-type-material {
+  display: none;
+}
