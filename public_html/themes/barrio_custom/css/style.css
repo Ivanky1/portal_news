@@ -132,3 +132,7 @@ img {
 .page-node-1 #content, .page-node-14 #content, .page-node-42 #content {
   margin-top: 46px;
 }
+
+nav.tabs {
+  display: none;
+}
