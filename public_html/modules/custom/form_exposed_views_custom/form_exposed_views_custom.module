@@ -87,26 +87,27 @@ function form_exposed_views_custom_node_insert(NodeInterface $node) {
  */
 function createNodeNews($node) {
     if (!isset($node->field_link_to_news)) {
-      return;
+        return;
     }
 
     if ($node->field_link_to_news->target_id != '') {
-      return;
+        return;
     }
 
     $node_news = [
-      'type' => 'news',
-      'title' => $node->title->value,
-      'body' => [
-        'value' => $node->body->value,
-        'format' => 'full_html',
-      ],
-      'field_date_publication' => $node->field_date_publication->value,
-      'field_speaker' => $node->field_speaker->value,
-      'field_tags' => $node->field_tags->value,
-      'field_type_material' => [
-        'target_id' => 1,
-      ]
+        'type' => 'news',
+        'title' => $node->title->value,
+        'uid' => $node->uid->value,
+        'body' => [
+            'value' => $node->body->value,
+            'format' => 'full_html',
+        ],
+        'field_date_publication' => $node->field_date_publication->value,
+        'field_speaker' => $node->field_speaker->value,
+        'field_tags' => $node->field_tags->value,
+        'field_type_material' => [
+            'target_id' => 1,
+        ]
     ];
 
     if (isset($node->field_img_news) && isset($node->field_img_news->target_id)) {
@@ -131,14 +132,14 @@ function createNodeNews($node) {
  */
 function form_exposed_views_custom_preprocess_views_view_table(&$vars) {
     if ($vars['view']->id() == 'all_materials') {
-      \Drupal::service('page_cache_kill_switch')->trigger();
-      $result_quote = getNewsWithData('quote');
-      $vars['quotes_all'] = getDataOfType($result_quote, 'quote');
+        \Drupal::service('page_cache_kill_switch')->trigger();
+        $result_quote = getNewsWithData('quote');
+        $vars['quotes_all'] = getDataOfType($result_quote, 'quote');
 
-      $result = getNewsWithData('material_social');
-      $vars['social_all'] = getDataOfType($result, 'material_social');
+        $result = getNewsWithData('material_social');
+        $vars['social_all'] = getDataOfType($result, 'material_social');
 
-      $vars['quotes_speaker'] = getDataOfType($result_quote, 'quote', 'speaker');
+        $vars['quotes_speaker'] = getDataOfType($result_quote, 'quote', 'speaker');
     }
 }
 
@@ -156,11 +157,11 @@ function getNewsWithData($type) {
     $q->condition('n.type', $type);
 
     if ($type == 'material_social') {
-      $q->leftJoin('node__field_img_news', 'img', 'img.entity_id = n.nid');
-      $q->leftJoin('file_managed', 'file', 'file.fid = img.field_img_news_target_id');
-      $q->join('node__field_social_network', 'social', 'social.entity_id = n.nid');
-      $q->fields('file', ['uri']);
-      $q->fields('social', ['field_social_network_value']);
+        $q->leftJoin('node__field_img_news', 'img', 'img.entity_id = n.nid');
+        $q->leftJoin('file_managed', 'file', 'file.fid = img.field_img_news_target_id');
+        $q->join('node__field_social_network', 'social', 'social.entity_id = n.nid');
+        $q->fields('file', ['uri']);
+        $q->fields('social', ['field_social_network_value']);
     }
 
     $q->fields('n', ['nid', 'title']);
@@ -183,38 +184,38 @@ function getDataOfType($result, $type, $relation = 'theme_id') {
     $news_with_data = [];
 
     foreach ($result as $r) {
-      $url_alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/'. $r->nid, 'ru');
+        $url_alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/'. $r->nid, 'ru');
 
-      $data = [
-        'nid' => $r->nid,
-        'date_raw' => $r->field_date_publication_value,
-        'date' => substr($r->field_date_publication_value, 8).
-          '.'.substr($r->field_date_publication_value, 5,2).
-          '.'.substr($r->field_date_publication_value, 0,4),
-        'body' => $r->body_value,
-        'tags' => $r->field_tags_value,
-        'speaker' => $r->field_speaker_value,
-        'title' => '<a href="'.$url_alias.'">'.$r->title.'</a>',
-        'theme_id' => $r->field_link_to_news_target_id,
-        'is_approve' => $r->field_is_approve_value,
-      ];
-
-      if ($type == 'material_social') {
-        $img_data = [
-         '#theme' => 'image_style',
-         '#style_name' => 'medium',
-         '#uri' => $r->uri,
+        $data = [
+            'nid' => $r->nid,
+            'date_raw' => $r->field_date_publication_value,
+            'date' => substr($r->field_date_publication_value, 8).
+              '.'.substr($r->field_date_publication_value, 5,2).
+              '.'.substr($r->field_date_publication_value, 0,4),
+            'body' => $r->body_value,
+            'tags' => $r->field_tags_value,
+            'speaker' => $r->field_speaker_value,
+            'title' => '<a href="'.$url_alias.'">'.$r->title.'</a>',
+            'theme_id' => $r->field_link_to_news_target_id,
+            'is_approve' => $r->field_is_approve_value,
         ];
 
-        $data['img'] = render($img_data);
-        $data['network'] = $r->field_social_network_value;
-      }
+        if ($type == 'material_social') {
+            $img_data = [
+             '#theme' => 'image_style',
+             '#style_name' => 'medium',
+             '#uri' => $r->uri,
+            ];
 
-      if ($relation == 'theme_id') {
-        $news_with_data[$r->field_link_to_news_target_id][] = $data;
-      } elseif ($r->field_speaker_value != '') {
-        $news_with_data[$r->field_speaker_value][] = $data;
-      }
+            $data['img'] = render($img_data);
+            $data['network'] = $r->field_social_network_value;
+        }
+
+        if ($relation == 'theme_id') {
+            $news_with_data[$r->field_link_to_news_target_id][] = $data;
+        } elseif ($r->field_speaker_value != '') {
+            $news_with_data[$r->field_speaker_value][] = $data;
+        }
 
     }
 
