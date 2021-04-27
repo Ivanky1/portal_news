@@ -20,6 +20,7 @@
     }
     %}
     <div class="col-md-5 border mb-3">
+        <h3>{{ row.columns.field_type_material.content }}</h3>
       <div class="item item-left row">
         <div class="col-md-5 nopadding hidden-xs">
           <img src="{{ item.img_src }}" />
@@ -34,7 +35,7 @@
             {% else %}
               <div class="no t-a-r">Проект</div>
             {% endif %}
-            <h3>{{ row.columns.field_type_material.content }}</h3>
+            
             <p class="date">{{ row.columns.field_date_publication.content }}</p>
             <h2>{{ item.title }} </h2>
 
@@ -81,14 +82,10 @@
 
             {% endif %}
 
-
-
           </div>
         </div>
       </div>
     </div>
-
-
 
     <div class="col-md-5 border mb-3">
     {% if item.nid in social_all|keys %}
