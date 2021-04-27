@@ -35,7 +35,7 @@
             {% else %}
               <div class="no t-a-r">Проект</div>
             {% endif %}
-            
+
             <p class="date">{{ row.columns.field_date_publication.content }}</p>
             <h2>{{ item.title }} </h2>
 
@@ -51,7 +51,7 @@
               <p><strong>Лид: {{ item.lead  }}</strong></p>
             {% endif %}
 
-            <p>{{ item.body  }}</p>
+            <p>{{ item.body|raw}}</p>
 
             {% if item.tags != '' %}
               <p>Тэги: {{ item.tags }}</p>
