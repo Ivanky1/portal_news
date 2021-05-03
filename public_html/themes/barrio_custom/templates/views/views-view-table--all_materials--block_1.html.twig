@@ -1,5 +1,7 @@
 
 <div class="row">
+    <div class="col-10">
+        <div class="row">
 
   {% for row in rows %}
     {% set type = row.columns.field_type_material.content[0]['field_output']["#markup"]|striptags|trim %}
@@ -37,7 +39,7 @@
         {% set class_common = 'col-md-6 border mb-3' %}
     {% endif %}
 
-    <div class="{{ class_common }}">
+    <div class="col-md-6 border">
         <h3>{{ row.columns.field_type_material.content }}</h3>
       <div class="item item-left row">
         <div class="col-md-5 nopadding hidden-xs">
@@ -47,7 +49,7 @@
         </div>
 
         <div class="col-md-7 nopadding">
-          <div class="content">
+          <div class="content content-item">
             {% if item.is_approve == 1 %}
               <div class="yes t-a-r">Согласовано</div>
             {% else %}
@@ -76,7 +78,9 @@
             {% endif %}
 
             <p><strong>Тема дня: {{ row.columns.field_link_to_news.content  }}</strong></p>
-            <i>Спикер: {{ item.speaker}} </i>
+              {% if item.speaker %}
+                  <i>Спикер: <span class="news-speaker">{{ item.speaker}}</span> </i>
+              {% endif %}
 
             {% if item.nid in quotes_all|keys %}
               <p><strong>Ключевые цитаты</strong></p>
@@ -105,7 +109,7 @@
       </div>
     </div>
 
-    <div class="{{ class_common }}">
+    <div class="col-md-6 border">
     {% if item.nid in social_all|keys %}
       <h3>Соц. сети</h3>
       {% for social in social_all[item.nid] %}
@@ -140,36 +144,39 @@
 
   </div>
 
-    {% if quotes_speaker_exists %}
-      <div class="col-md-2 border mb-3 item">
-          {% if item.speaker in quotes_speaker|keys %}
 
-              <p><strong>Ранее сказано</strong></p>
-
-              {% for quote in quotes_speaker[item.speaker] %}
-                  {% if item.nid != quote.theme_id and date(item.date_raw) > date(quote.date_raw) %}
-                      {% if quote.is_approve == 1 %}
-                          <div class="yes t-a-r">Согласовано</div>
-                      {% else %}
-                          <div class="no t-a-r">Проект</div>
-                      {% endif %}
-
-                      <p><i>{{ quote.date }}</i></p>
-                      <p>{{ quote.title|raw }}</p>
-                      {{ quote.body|raw}}
-                      <p>
-                          <i>Тэги: {{ quote.tags }} </i><br/>
-                          <i>Спикер: {{ quote.speaker }} </i>
-                      </p>
-                  {% endif %}
-              {% endfor %}
-
-
-          {% endif %}
-      </div>
-    {% endif %}
 
   {% endfor %}
 
 </div>
 
+</div>
+
+    <div class="col-2 border mb-3 item quotes-speaker">
+        {#{% if item.speaker in quotes_speaker|keys %}
+
+        <p><strong>Ранее сказано</strong></p>
+
+        {% for quote in quotes_speaker[item.speaker] %}
+            {% if item.nid != quote.theme_id and date(item.date_raw) > date(quote.date_raw) %}
+                {% if quote.is_approve == 1 %}
+                    <div class="yes t-a-r">Согласовано</div>
+                {% else %}
+                    <div class="no t-a-r">Проект</div>
+                {% endif %}
+
+                <p><i>{{ quote.date }}</i></p>
+                <p>{{ quote.title|raw }}</p>
+                {{ quote.body|raw}}
+                <p>
+                    <i>Тэги: {{ quote.tags }} </i><br/>
+                    <i>Спикер: {{ quote.speaker }} </i>
+                </p>
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}#}
+</div>
+
+</div>

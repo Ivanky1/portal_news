@@ -5,6 +5,7 @@ use Drupal\node\NodeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
+use Drupal\form_exposed_views_custom\HelperMaterialsBase;
 
 /**
  * Implements hook_theme().
@@ -133,91 +134,12 @@ function createNodeNews($node) {
 function form_exposed_views_custom_preprocess_views_view_table(&$vars) {
     if ($vars['view']->id() == 'all_materials') {
         \Drupal::service('page_cache_kill_switch')->trigger();
-        $result_quote = getNewsWithData('quote');
-        $vars['quotes_all'] = getDataOfType($result_quote, 'quote');
+        $result_quote = HelperMaterialsBase::getNewsWithData('quote');
+        $vars['quotes_all'] = HelperMaterialsBase::getDataOfType($result_quote, 'quote');
 
-        $result = getNewsWithData('material_social');
-        $vars['social_all'] = getDataOfType($result, 'material_social');
+        $result = HelperMaterialsBase::getNewsWithData('material_social');
+        $vars['social_all'] = HelperMaterialsBase::getDataOfType($result, 'material_social');
 
-        $vars['quotes_speaker'] = getDataOfType($result_quote, 'quote', 'speaker');
+        $vars['quotes_speaker'] = HelperMaterialsBase::getDataOfType($result_quote, 'quote', 'speaker');
     }
-}
-
-/**
- * @return array
- */
-function getNewsWithData($type) {
-    $q = \Drupal::database()->select('node_field_data', 'n');
-    $q->join('node__field_link_to_news', 'link', 'link.entity_id = n.nid');
-    $q->leftJoin('node__field_date_publication	', 'date', 'date.entity_id = n.nid');
-    $q->leftJoin('node__body', 'body', 'body.entity_id = n.nid');
-    $q->leftJoin('node__field_tags', 'tags', 'tags.entity_id = n.nid');
-    $q->leftJoin('node__field_speaker', 'speaker', 'speaker.entity_id = n.nid');
-    $q->leftJoin('node__field_is_approve', 'approve', 'approve.entity_id = n.nid');
-    $q->condition('n.type', $type);
-
-    if ($type == 'material_social') {
-        $q->leftJoin('node__field_img_news', 'img', 'img.entity_id = n.nid');
-        $q->leftJoin('file_managed', 'file', 'file.fid = img.field_img_news_target_id');
-        $q->join('node__field_social_network', 'social', 'social.entity_id = n.nid');
-        $q->fields('file', ['uri']);
-        $q->fields('social', ['field_social_network_value']);
-    }
-
-    $q->fields('n', ['nid', 'title']);
-    $q->fields('link', ['field_link_to_news_target_id']);
-    $q->fields('date', ['field_date_publication_value']);
-    $q->fields('body', ['body_value']);
-    $q->fields('tags', ['field_tags_value']);
-    $q->fields('speaker', ['field_speaker_value']);
-    $q->fields('approve', ['field_is_approve_value']);
-    return $q->execute()->fetchAll();
-}
-
-/**
- * @param $result
- * @param $type
- * @param string $relation
- * @return array
- */
-function getDataOfType($result, $type, $relation = 'theme_id') {
-    $news_with_data = [];
-
-    foreach ($result as $r) {
-        $url_alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/'. $r->nid, 'ru');
-
-        $data = [
-            'nid' => $r->nid,
-            'date_raw' => $r->field_date_publication_value,
-            'date' => substr($r->field_date_publication_value, 8).
-              '.'.substr($r->field_date_publication_value, 5,2).
-              '.'.substr($r->field_date_publication_value, 0,4),
-            'body' => $r->body_value,
-            'tags' => $r->field_tags_value,
-            'speaker' => $r->field_speaker_value,
-            'title' => '<a href="'.$url_alias.'">'.$r->title.'</a>',
-            'theme_id' => $r->field_link_to_news_target_id,
-            'is_approve' => $r->field_is_approve_value,
-        ];
-
-        if ($type == 'material_social') {
-            $img_data = [
-             '#theme' => 'image_style',
-             '#style_name' => 'medium',
-             '#uri' => $r->uri,
-            ];
-
-            $data['img'] = render($img_data);
-            $data['network'] = $r->field_social_network_value;
-        }
-
-        if ($relation == 'theme_id') {
-            $news_with_data[$r->field_link_to_news_target_id][] = $data;
-        } elseif ($r->field_speaker_value != '') {
-            $news_with_data[$r->field_speaker_value][] = $data;
-        }
-
-    }
-
-    return $news_with_data;
 }

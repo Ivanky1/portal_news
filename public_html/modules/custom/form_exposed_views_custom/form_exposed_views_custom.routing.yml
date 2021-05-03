@@ -1,0 +1,7 @@
+form_exposed_views_custom.post_quotes_speaker:
+  path: '/path/quotes/speakers'
+  defaults:
+    _controller: '\Drupal\form_exposed_views_custom\Controller\QuotesSpeakerController::postAction'
+    _title: ''
+  requirements:
+    _permission: 'access content'

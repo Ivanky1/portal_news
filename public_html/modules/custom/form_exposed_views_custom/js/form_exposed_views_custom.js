@@ -32,6 +32,50 @@
                 }
             })
 
+            async function f() {
+                try {
+                    var speakers = [];
+                    var date_first = [];
+
+                    $('.news-speaker').each(function () {
+                        var item = $(this).text().trim()
+
+                        if (!speakers.includes(item)) {
+                            speakers.push(item)
+                        }
+                    })
+
+                    $('.date').each(function () {
+                        var item = $(this).text().trim()
+                        date_first = item
+                    })
+
+                    if (speakers.length < 1) {
+                        throw new Error('data_speakers is empty');
+                    }
+
+                    const data_all = {speakers, date_first}
+                    return await Promise.resolve(data_all);
+
+                } catch (e) {
+
+                }
+
+            }
+
+            $('.block-views-blockall-materials-block-1').once('blockall-materials-active').each(function (i) {
+                f().then(response => {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/path/quotes/speakers',
+                        data: 'data_all='+JSON.stringify(response),
+                        success: function (data) {
+                            $('.quotes-speaker').html(data);
+                        }
+                    });
+                });
+            })
+
         }
     }
 }(jQuery, Drupal, drupalSettings));

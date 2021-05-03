@@ -112,7 +112,8 @@ class AllMaterialsFilter {
         $form['link_type']['#markup'] = $types_wrapper;
 
         $content = [
-            '#markup' => '<div class="tags"><h2>Тэги:</h2>' . $basic_items . '</div>',
+            '#markup' => '<div class="tags"><h2>Тэги:</h2><div class="tags-cloud">' .
+                $basic_items . '</div></div>',
         ];
 
         $links_content = str_replace('/node/1', '',
@@ -138,7 +139,7 @@ class AllMaterialsFilter {
 
       $form['speaker'] = [
         '#title' => 'Спикеры:',
-        '#type' => 'select',
+        '#type' => 'select2',
         '#default_value' => '',
         '#options' => $options
       ];
@@ -158,7 +159,7 @@ class AllMaterialsFilter {
 
       $form['links'] = [
         '#title' => 'Тема дня:',
-        '#type' => 'select',
+        '#type' => 'select2',
         '#default_value' => '',
         '#options' => $options
       ];

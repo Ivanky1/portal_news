@@ -1,7 +1,6 @@
 .tags {
   padding: 10px 20px;
   width: 380px;
-  /* Style for "jQuery" */
   font-family: Roboto;
   font-size: 17px;
   font-weight: 300;
@@ -11,7 +10,6 @@
 .tags a {
   white-space: nowrap;
   color: #ffffff;
-  /* Style for "Rounded Re" */
   width: auto;
   border-radius: 13px;
   background-color: #090a0b;
@@ -19,10 +17,9 @@
   text-decoration: none;
   color: #ffffff;
 
-  position: relative; /* для подсказки */
+  position: relative;
 }
 
-/* это нужно, если есть необходимость что бы можно было навести курсор на подсказку. Иначе будет исчезать */
 .tags a:after {
   content: '';
   position: absolute;
@@ -44,7 +41,6 @@
   color: #ffffff !important;
 }
 
-/* оформление плашки */
 .tags__hide {
   position: absolute;
   left: 50%;
@@ -56,8 +52,6 @@
   padding: 5px 10px;
   line-height: 1;
   transition: all .3s;
-
-  /* параметры для изчезновения/появления. Можете настроить как вам угодно */
   visibility: hidden;
   opacity: 0;
   bottom: 0;
@@ -67,7 +61,6 @@
   opacity: 1;
   bottom: calc(100% + 15px);
 }
-/* треугольник */
 .tags__hide:before {
   content: '';
   width: 10px;
@@ -123,3 +116,12 @@
 .field--name-field-type-material {
   display: none;
 }
+
+.select2-container--default .select2-selection--single {
+  height: 38px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  line-height: 33px;
+}
+

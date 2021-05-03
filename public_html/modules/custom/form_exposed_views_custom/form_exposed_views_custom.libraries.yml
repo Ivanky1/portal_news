@@ -3,7 +3,7 @@ form_filter:
     theme:
       css/form_exposed_views_custom.css: {}
   js:
-    js/form_exposed_views_custom.js: { }
+    js/form_exposed_views_custom.js: {}
   dependencies:
     - core/jquery
     - core/jquery.once

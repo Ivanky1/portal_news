@@ -29,6 +29,7 @@
         "drupal/imce": "^2.3",
         "drupal/pathauto": "^1.8",
         "drupal/quick_node_clone": "^1.14",
+        "drupal/select2": "^1.13",
         "drupal/token": "^1.9",
         "drupal/tvi": "^1.0@RC",
         "drupal/twig_tweak": "^3.0",
