@@ -54,6 +54,11 @@
                         throw new Error('data_speakers is empty');
                     }
 
+                    date_first = date_first.substr(6)
+                        +'-'+ date_first.substr(3, 2)
+                        +'-'+ date_first.substr(0, 2)
+
+
                     const data_all = {speakers, date_first}
                     return await Promise.resolve(data_all);
 
