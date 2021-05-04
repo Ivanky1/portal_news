@@ -104,7 +104,7 @@ class AllMaterialsFilter {
             }
 
             $types_wrapper .= '<div class="page-menu__item'.$class_active.'">
-                <a class="page-menu__link mr-md-3" href="'.$param['href'].'">'.$name.'</a>
+                <a class="page-menu__link mr-2" href="'.$param['href'].'">'.$name.'</a>
             </div>';
         }
 

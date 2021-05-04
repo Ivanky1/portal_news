@@ -16,6 +16,7 @@
 
 .tagss h2, .tags-cloud {
   text-align: center;
+  word-wrap: break-word;
 }
 
 .tags a {
@@ -30,7 +31,6 @@
 }
 
 .tagss a {
-  white-space: nowrap;
   color: #000;
   width: auto;
   text-decoration: none;
