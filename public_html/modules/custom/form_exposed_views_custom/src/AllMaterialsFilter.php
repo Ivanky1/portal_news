@@ -112,7 +112,7 @@ class AllMaterialsFilter {
         $form['link_type']['#markup'] = $types_wrapper;
 
         $content = [
-            '#markup' => '<div class="tags"><h2>Тэги:</h2><div class="tags-cloud">' .
+            '#markup' => '<div class="tagss mt-4"><h2>Тэги:</h2><div class="tags-cloud">' .
                 $basic_items . '</div></div>',
         ];
 
@@ -185,17 +185,19 @@ class AllMaterialsFilter {
 
         $tags = explode(',', implode(',', $tags_value));
         $tags_all = [];
+        $tags_all2 = [];
 
         foreach ($tags as $tag) {
             $tag = trim($tag);
 
             if (!in_array($tag, $tags_all)) {
                 $tags_all[] = $tag;
+                $tags_all2[] = $tag.',';
             }
 
         }
 
-        return $tags_all;
+        return $tags_all2;
     }
 
     /**
