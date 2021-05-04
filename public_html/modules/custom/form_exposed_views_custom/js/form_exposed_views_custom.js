@@ -45,7 +45,7 @@
                         }
                     })
 
-                    $('.date').each(function () {
+                    $('.date-news').each(function () {
                         var item = $(this).text().trim()
                         date_first = item
                     })
