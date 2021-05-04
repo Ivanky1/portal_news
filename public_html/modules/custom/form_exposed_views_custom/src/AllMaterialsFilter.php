@@ -104,7 +104,7 @@ class AllMaterialsFilter {
             }
 
             $types_wrapper .= '<div class="page-menu__item'.$class_active.'">
-                <a class="page-menu__link mr-2" href="'.$param['href'].'">'.$name.'</a>,
+                <a class="page-menu__link mr-2" href="'.$param['href'].'">'.$name.'</a>
             </div>';
         }
 
@@ -113,7 +113,7 @@ class AllMaterialsFilter {
 
         $content = [
             '#markup' => '<div class="tagss mt-4"><h2>Тэги:</h2><div class="tags-cloud">' .
-                $basic_items . '</div></div>',
+                $basic_items . ',</div></div>',
         ];
 
         $links_content = str_replace('/node/1', '',
@@ -195,7 +195,7 @@ class AllMaterialsFilter {
 
         }
 
-        return $tags_all2;
+        return $tags_all;
     }
 
     /**
