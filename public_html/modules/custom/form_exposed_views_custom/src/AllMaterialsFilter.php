@@ -81,8 +81,8 @@ class AllMaterialsFilter {
             }
 
             $url_parser_new['query']['tags'] = str_replace(' ', '+', $tag);
-            $string = '<a class="mr-md-3'. $class_active . '" href=":options_page">' .
-            $tag . '</a>';
+            $string = '<a class="'. $class_active . '" href=":options_page">' .
+            $tag . ', </a>';
             $options = [
               ':options_page' => Url::fromRoute('entity.node.canonical',
                 ['node' => 1],
@@ -113,7 +113,7 @@ class AllMaterialsFilter {
 
         $content = [
             '#markup' => '<div class="tagss mt-4"><h2>Тэги:</h2><div class="tags-cloud">' .
-                $basic_items . ',</div></div>',
+                $basic_items . '</div></div>',
         ];
 
         $links_content = str_replace('/node/1', '',
