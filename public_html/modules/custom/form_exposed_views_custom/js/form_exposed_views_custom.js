@@ -18,13 +18,11 @@
                 })
             })
 
-            $('.success-add').once('success-add-active').each(function (i) {
-                if ($('.approve-node-form .success-add.yes').length > 0) {
-                    $('nav.tabs').hide()
-                } else {
-                    $('nav.tabs').show()
-                }
-            })
+            if ($('.approve-node-form .success-add.yes').length > 0) {
+                $('nav.tabs').hide()
+            } else {
+                $('nav.tabs').show()
+            }
 
             $('.approve-hidden').once('approve-hidden-active').each(function (i) {
                 if ($('.approve-hidden').length > 0 && $('.approve-hidden').val() == 0) {
@@ -83,4 +81,13 @@
 
         }
     }
-}(jQuery, Drupal, drupalSettings));
+} (jQuery, Drupal, drupalSettings));
+
+var success = document.querySelector('.approve-node-form .success-add.yes')
+var nav = document.querySelector('nav.tabs')
+
+if (success != null) {
+    nav.style.display = 'none'
+} else {
+    nav.style.display = 'block'
+}
