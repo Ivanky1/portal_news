@@ -32,3 +32,11 @@ function barrio_custom_form_system_theme_settings_alter(&$form, FormStateInterfa
     'bg-transparent' => t('Transparent'),
   ];
 }
+
+function barrio_custom_preprocess_page(&$variables) {
+    $uid = \Drupal::currentUser()->id();
+
+    if ($uid > 0) {
+        $variables['user_id'] = $uid;
+    }
+}

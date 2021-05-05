@@ -48,47 +48,34 @@
 #}
 
 {% block head %}
-        {% if page.secondary_menu or page.top_header or page.top_header_form %}
-          <nav{{ navbar_top_attributes }}>
-          {% if container_navbar %}
-          <div class="container">
-          {% endif %}
-              {{ page.secondary_menu }}
-              {{ page.top_header }}
-              {% if page.top_header_form %}
-                <div class="form-inline navbar-form float-right">
-                  {{ page.top_header_form }}
-                </div>
+
+    <nav{{ navbar_attributes }}>
+      <div class="container">
+              {{ page.header }}
+
+              {% if user_id %}
+                  {% set logout_text = 'Выйти' %}
+                  {% set login_text = drupal_token('current-user:display-name') %}
+              {% else %}
+                  {% set logout_text = '' %}
+                  {% set login_text = 'Войти' %}
               {% endif %}
-          {% if container_navbar %}
-          </div>
-          {% endif %}
-          </nav>
-        {% endif %}
-        <nav{{ navbar_attributes }}>
-          {% if container_navbar %}
-          <div class="container">
-          {% endif %}
-            {{ page.header }}
-            {% if page.primary_menu or page.header_form %}
-              <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#CollapsingNavbar" aria-controls="CollapsingNavbar" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-              <div class="collapse navbar-collapse" id="CollapsingNavbar">
-                {{ page.primary_menu }}
-                {% if page.header_form %}
-                  <div class="form-inline navbar-form float-right">
-                    {{ page.header_form }}
+
+              <div class="col-6 col-md-4 order-3 order-md-3 text-right">
+                  <div class="site-top-icons login">
+                      <ul>
+                          <li class="d-none d-md-block"><a href="/user">{{ login_text }}</a></li>
+                          <li class="d-none d-md-block"><a href="/user/logout">{{ logout_text }}</a></li>
+                      </ul>
                   </div>
-                {% endif %}
-	          </div>
-            {% endif %}
-            {% if sidebar_collapse %}
-              <button class="navbar-toggler navbar-toggler-left collapsed" type="button" data-toggle="collapse" data-target="#CollapsingLeft" aria-controls="CollapsingLeft" aria-expanded="false" aria-label="Toggle navigation"></button>
-            {% endif %}
-          {% if container_navbar %}
-          </div>
-          {% endif %}
-        </nav>
+              </div>
+
+
+      </div>
+    </nav>
+
 {% endblock %}
+
 
 {% block content %}
         <div id="main" class="{{ container }}">
