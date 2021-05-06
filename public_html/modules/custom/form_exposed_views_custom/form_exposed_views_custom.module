@@ -65,7 +65,7 @@ function form_exposed_views_custom_preprocess_page(&$variables) {
     if (\Drupal::service('path.matcher')->isFrontPage()) {
 
     }
-
+    $variables['#cache']['max-age']= 0;
     $variables['#attached']['library'][] = 'form_exposed_views_custom/form_filter';
 }
 

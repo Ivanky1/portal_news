@@ -27,7 +27,7 @@
                 })
             })
 
-            $('.approve-node-form .success-add').once('success-add-active').each(function (i) {
+            $('.success-add').once('success-add-active').each(function (i) {
                 if ($(this).hasClass('yes')) {
                     $('nav.tabs').hide()
                 } else {
@@ -95,10 +95,10 @@
 } (jQuery, Drupal, drupalSettings));
 
 document.addEventListener("DOMContentLoaded", function () {
-    var success = document.querySelector('.approve-node-form .success-add.yes')
+    var success = document.querySelector('.approve-hidden')
     var nav = document.querySelector('nav.tabs')
 
-    if (success != null) {
+    if (success.value == '1') {
         nav.style.display = 'none'
     } else {
         nav.style.display = 'block'
