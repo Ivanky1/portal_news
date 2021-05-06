@@ -150,6 +150,7 @@ nav.tabs {
   padding-left: 15px;
   margin-bottom: 15px;
   border-left: 2px solid #b99d61;
+  cursor: pointer;
 }
 .widget-list {
   padding: 0;
