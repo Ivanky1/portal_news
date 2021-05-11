@@ -11,6 +11,7 @@ vendor
 /public_html/sites/*/settings.php
 /public_html/sites/*/settings.local.php
 /public_html/sites/default/files/
+/public_html/sites/default/files/*
 
 
 # Ignore .env files as they are personal
