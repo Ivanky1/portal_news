@@ -72,6 +72,7 @@ class AllMaterialsFilter {
 
         $basic_items = '';
 
+
         foreach ($tags_all as $tag) {
             $class_active = '';
 
@@ -82,7 +83,7 @@ class AllMaterialsFilter {
 
             $url_parser_new['query']['tags'] = str_replace(' ', '+', $tag);
             $string = '<a class="'. $class_active . '" href=":options_page">' .
-            $tag . ', </a>';
+            $tag . '</a>';
             $options = [
               ':options_page' => Url::fromRoute('entity.node.canonical',
                 ['node' => 1],
@@ -111,8 +112,9 @@ class AllMaterialsFilter {
         $types_wrapper .= '</div>';
         $form['link_type']['#markup'] = $types_wrapper;
 
+
         $content = [
-            '#markup' => '<div class="tagss mt-4"><h2>Тэги:</h2><div class="tags-cloud">' .
+            '#markup' => '<div class="tags mt-4"><h2>Тэги:</h2><div class="tags-cloud">' .
                 $basic_items . '</div></div>',
         ];
 
@@ -189,7 +191,7 @@ class AllMaterialsFilter {
         foreach ($tags as $tag) {
             $tag = trim($tag);
 
-            if (!in_array($tag, $tags_all)) {
+            if ($tag != '' && !in_array($tag, $tags_all)) {
                 $tags_all[] = $tag;
             }
 

@@ -27,7 +27,7 @@ class QuotesSpeakerController extends ControllerBase {
     }
 
     private function getContentHtml($rows) {
-        $html = '<p><strong>Ранее сказано</strong></p>';
+        $html = '<strong>Ранее сказано</strong>';
 
         foreach ($rows as $row) {
             foreach ($row as $r) {
