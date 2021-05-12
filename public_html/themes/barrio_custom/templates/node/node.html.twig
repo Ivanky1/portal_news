@@ -24,11 +24,11 @@
         {% endif %}
 
         {% if node.field_sub_title.value %}
-          <div>{{ node.field_sub_title.value|trim }}</div>
+          <div><i>{{ node.field_sub_title.value|trim }}</i></div>
         {% endif %}
 
         {% if node.field_lead.value %}
-          <div><strong>Лид: {{ node.field_lead.value|trim }}</strong></div>
+          <div><i>Лид: {{ node.field_lead.value|trim }}</i></div>
         {% endif %}
 
         {% if node.body.value %}
@@ -36,11 +36,11 @@
         {% endif %}
 
         {% if node.field_speaker.value %}
-          <div>Спикер: {{ node.field_speaker.value|trim }}</div>
+            <div><strong><i>Спикер: {{ node.field_speaker.value|trim }}</i></strong></div>
         {% endif %}
 
         {% if node.field_tags.value %}
-          <div>Тэги: {{ node.field_tags.value }}</div>
+            <div><i>Тэги: {{ node.field_tags.value }}</i></div>
         {% endif %}
 
         {% if node.field_social_network.value %}

@@ -114,7 +114,7 @@ class AllMaterialsFilter {
 
 
         $content = [
-            '#markup' => '<div class="tags mt-4"><h2>Тэги:</h2><div class="tags-cloud">' .
+            '#markup' => '<div class="tags mt-4"><div class="tags-cloud">' .
                 $basic_items . '</div></div>',
         ];
 

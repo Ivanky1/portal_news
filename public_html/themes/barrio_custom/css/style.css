@@ -189,11 +189,15 @@ header .site-top-icons ul a {
 }
 
 .material-create {
-  margin: 20px 0;
+  margin: 0 0 30px 0;
 }
 .material-create h3 {
   font-size: 17px;
   font-weight: bold;
+}
+
+.material-create ul {
+  padding-left: 14px;;
 }
 
 .material-create li a {

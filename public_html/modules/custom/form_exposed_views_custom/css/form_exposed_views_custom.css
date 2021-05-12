@@ -1,7 +1,7 @@
 .tags {
-  padding: 10px 20px;
-  font-family: Roboto;
-  font-size: 17px;
+ /* padding: 10px 20px;*/
+  /*font-family: Roboto;*/
+  font-size: 12px;
   font-weight: 300;
   line-height: 40px;
   display: flex;
@@ -12,7 +12,7 @@
 .tagss h2, .tags-cloud {
   text-align: center;
   word-wrap: break-word;
-  margin-left: 7px;
+  /*margin-left: 7px;*/
 }
 
 .tags a {
@@ -121,8 +121,8 @@
   position: relative;
   display: block;
   height: 42px;
-  font-size: 0.86667rem;
-  font-weight: bold;
+  font-size: 12px;
+/*  font-weight: bold;*/
   line-height: 50px;
   white-space: nowrap;
   text-decoration: none;
@@ -133,6 +133,7 @@
 .page-menu__item.is-active .page-menu__link {
   color: #007bff;
   padding: 0 25px;
+  font-weight: bold;
 }
 .page-menu__item.is-active .page-menu__link::after {
   position: absolute;
