@@ -217,3 +217,7 @@ header .site-top-icons ul a {
   float: left;
   margin-right: 25px;
 }
+
+.node-news .field--name-field-img-news a {
+  display: none;
+}
