@@ -32,7 +32,7 @@
         {% endfor %}
     {% endif %}
 
-    <div class="col-md-6">
+    <div class="col-md-6 mb-5">
       <div class="item item-left row">
         <div class="col-md-5 nopadding hidden-xs">
           <img src="{{ item.img_src }}" />
@@ -104,7 +104,7 @@
       </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-6 mb-5">
     {% if item.nid in social_all|keys %}
       {% for social in social_all[item.nid] %}
 
