@@ -86,6 +86,10 @@
 
             $('.block-views-blockall-materials-block-1').once('blockall-materials-active').each(function (i) {
                 f().then(response => {
+                    if (!response) {
+                        return null
+                    }
+
                     $.ajax({
                         type: 'POST',
                         url: '/path/quotes/speakers',
