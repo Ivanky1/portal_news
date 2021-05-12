@@ -78,7 +78,7 @@
 
             <p><strong>Тема дня: {{ row.columns.field_link_to_news.content  }}</strong></p>
               {% if item.speaker %}
-                  <i><strong>Спикер: <span class="news-speaker">{{ item.speaker}}</span></strong> </i>
+                <p><i><strong>Спикер: <span class="news-speaker">{{ item.speaker}}</span></strong></i></p>
               {% endif %}
 
             {% if item.nid in quotes_all|keys %}
