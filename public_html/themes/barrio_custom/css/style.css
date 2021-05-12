@@ -198,6 +198,7 @@ header .site-top-icons ul a {
 
 .material-create li a {
   color: #000;
+  font-weight:normal;
 }
 
 .materials-table h3, .materials-table h2, .materials-table a{
