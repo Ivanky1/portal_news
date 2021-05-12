@@ -48,7 +48,6 @@
 
         <div class="col-md-7 nopadding">
           <div class="content content-item">
-              <h3>{{ row.columns.field_type_material.content }}</h3>
 
               {% if item.is_approve == 1 %}
               <div class="yes t-a-r">Согласовано</div>
@@ -77,12 +76,14 @@
               <p><i>Тэги: {{ item.tags }}</i></p>
             {% endif %}
 
-            <p><strong>Тема дня: {{ row.columns.field_link_to_news.content  }}</strong></p>
-              {% if item.speaker %}
+            {% if item.speaker %}
                 <p><i><strong>Спикер: <span class="news-speaker">{{ item.speaker}}</span></strong></i></p>
-              {% endif %}
+            {% endif %}
 
-            {% if item.nid in quotes_all|keys %}
+            <p>Тема дня: {{ row.columns.field_link_to_news.content  }}</p>
+            <p>{{ row.columns.field_type_material.content }}</p>
+
+              {% if item.nid in quotes_all|keys %}
               <p><strong>Ключевые цитаты</strong></p>
 
               {% for quote in quotes_all[item.nid] %}
@@ -92,7 +93,7 @@
                   <div class="no t-a-r">Проект</div>
                 {% endif %}
 
-                <p><i>{{ quote.date }}</i></p>
+                <p class="date">{{ quote.date }}</p>
                 <p>{{ quote.title|raw }}</p>
                 {{ quote.body|raw }}
                 <p>
