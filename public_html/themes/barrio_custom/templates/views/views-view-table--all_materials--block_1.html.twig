@@ -39,7 +39,6 @@
     {% endif %}
 
     <div class="col-md-6 border">
-        <h3>{{ row.columns.field_type_material.content }}</h3>
       <div class="item item-left row">
         <div class="col-md-5 nopadding hidden-xs">
           <img src="{{ item.img_src }}" />
@@ -49,7 +48,9 @@
 
         <div class="col-md-7 nopadding">
           <div class="content content-item">
-            {% if item.is_approve == 1 %}
+              <h3>{{ row.columns.field_type_material.content }}</h3>
+
+              {% if item.is_approve == 1 %}
               <div class="yes t-a-r">Согласовано</div>
             {% else %}
               <div class="no t-a-r">Проект</div>
