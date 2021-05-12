@@ -94,7 +94,7 @@
                 {% endif %}
 
                 <p class="date">{{ quote.date }}</p>
-                <p>{{ quote.title|raw }}</p>
+                <h2>{{ quote.title|raw }}</h2>
                 {{ quote.body|raw }}
                 <p>
                   <i>Тэги: {{ quote.tags }} </i><br/>
@@ -112,7 +112,6 @@
 
     <div class="col-md-6 border">
     {% if item.nid in social_all|keys %}
-      <h3>Соц. сети</h3>
       {% for social in social_all[item.nid] %}
 
         <div class="item item-left row">
@@ -133,6 +132,7 @@
               <h2>{{ social.title|raw }} </h2>
               <p><strong>{{ social.network }}</strong></p>
               {{ social.body|raw  }}
+              <p>Соц. сети</p>
             </div>
           </div>
 

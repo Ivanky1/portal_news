@@ -38,7 +38,7 @@ class QuotesSpeakerController extends ControllerBase {
                 }
 
                 $html .= '<p class="date">'.$r['date'].'</p>
-                      <p>'.$r['title'].'</p>
+                      <h2>'.$r['title'].'</h2>
                       '.$r['body'];
 
                 $html .= '<p>
