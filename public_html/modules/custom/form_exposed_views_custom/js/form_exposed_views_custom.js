@@ -103,4 +103,11 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
         nav.style.display = 'block'
     }
+
+    var href_to_img = document.querySelector('.field--name-field-img-news a')
+
+    if (href_to_img != null) {
+        href_to_img.target = '_blank'
+    }
+
 });
