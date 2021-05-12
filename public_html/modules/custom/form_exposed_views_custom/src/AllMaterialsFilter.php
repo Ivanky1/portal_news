@@ -140,7 +140,7 @@ class AllMaterialsFilter {
       }
 
       $form['speaker'] = [
-        '#title' => 'Спикеры:',
+        '#title' => 'Спикеры',
         '#type' => 'select2',
         '#default_value' => '',
         '#options' => $options
@@ -160,7 +160,7 @@ class AllMaterialsFilter {
       }
 
       $form['links'] = [
-        '#title' => 'Тема дня:',
+        '#title' => 'Тема дня',
         '#type' => 'select2',
         '#default_value' => '',
         '#options' => $options
