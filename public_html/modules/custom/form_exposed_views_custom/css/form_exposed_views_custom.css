@@ -1,22 +1,18 @@
 .tags {
   padding: 10px 20px;
-  width: 380px;
   font-family: Roboto;
   font-size: 17px;
   font-weight: 300;
   line-height: 40px;
-}
-
-.tagss {
-  font-family: Roboto;
-  font-size: 17px;
-  font-weight: 300;
-  line-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .tagss h2, .tags-cloud {
   text-align: center;
   word-wrap: break-word;
+  margin-left: 7px;
 }
 
 .tags a {
@@ -60,7 +56,7 @@
   visibility: visible;
 }
 .tags a:hover, .tags a.is-active {
-  background: #1feb93;
+  background: #007bff;
   text-decoration: none;
   color: #ffffff;
 }
@@ -106,7 +102,12 @@
 }
 
 .page-menu__scroll {
-  margin-top: -15px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.mb-30 {
+  margin-bottom: 30px;
 }
 
 .page-menu__item {
@@ -130,7 +131,8 @@
 }
 
 .page-menu__item.is-active .page-menu__link {
-  color: #0b820d;
+  color: #007bff;
+  padding: 0 25px;
 }
 .page-menu__item.is-active .page-menu__link::after {
   position: absolute;
@@ -139,10 +141,10 @@
   bottom: 0;
   height: 3px;
   content: '';
-  background-image: -webkit-gradient(linear,right top,left top,from(#0b8243),to(#005f2d));
-  background-image: -webkit-linear-gradient(right,#0b8243,#005f2d);
-  background-image: -o-linear-gradient(right,#0b8243,#005f2d);
-  background-image: linear-gradient(to left,#0b8243,#005f2d);
+  background-image: -webkit-gradient(linear,right top,left top,from(#007bff),to(#0055ff));
+  background-image: -webkit-linear-gradient(right,#007bff,#0055ff);
+  background-image: -o-linear-gradient(right,#007bff,#0055ff);
+  background-image: linear-gradient(to left,#007bff,#0055ff);
 }
 
 .field--name-field-type-material {
@@ -157,3 +159,10 @@
   line-height: 33px;
 }
 
+.reset-btn-margin {
+  margin-top: 32px;
+}
+
+#views-exposed-form-all-materials-block-1 label {
+  font-weight: bold;
+}

@@ -129,6 +129,11 @@ img {
   display: none;
 }
 
+.breadcrumb {
+  background-color: #FFFFFF;
+  margin-top: 20px;
+}
+
 .page-node-1 #content, .page-node-14 #content, .page-node-42 #content {
   margin-top: 46px;
 }
@@ -193,4 +198,22 @@ header .site-top-icons ul a {
 
 .material-create li a {
   color: #000;
+}
+
+.materials-table h3, .materials-table h2, .materials-table a{
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.materials-table  {
+  font-size: 12px;
+}
+
+.node-news .content-all {
+
+}
+
+.node-news .field--name-field-img-news {
+  float: left;
+  margin-right: 25px;
 }

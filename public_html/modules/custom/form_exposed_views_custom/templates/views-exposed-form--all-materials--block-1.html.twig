@@ -1,13 +1,13 @@
 <div class="row">
-    <div class="col-4">{{ form.publication }}</div>
-    <div class="col-4">{{ form.speaker }}</div>
+    <div class="col-12 mb-30">{{ form.link_type }}</div>
+    <div class="col-3">{{ form.publication }}</div>
+    <div class="col-3">{{ form.speaker }}</div>
     <div class="col-4">{{ form.links }}</div>
-    <div class="col-3">
-        {{ form.link_type }}
+    <div class="col-2 reset-btn-margin">{{ form.actions }}</div>
+
+    <div class="col-10">{{ form.tags_links }}</div>
+    <div class="col-12 mb-5">
         {{ form.tags }}
         {{ form.types }}
     </div>
-    <div class="col-5">{{ form.tags_links }}</div>
-    <div class="col-4 mt-5">{{ form.actions }}</div>
-    <div class="col-12 mb-5"></div>
 </div>

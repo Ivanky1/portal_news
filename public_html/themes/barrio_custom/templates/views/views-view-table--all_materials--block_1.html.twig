@@ -1,5 +1,4 @@
-
-<div class="row">
+<div class="row materials-table">
     <div class="col-10">
         <div class="row">
 
@@ -60,7 +59,7 @@
             <h2>{{ item.title }} </h2>
 
             {% if item.sub_title != '' %}
-              <p>{{ item.sub_title }}</p>
+              <p><i>{{ item.sub_title }}</i></p>
             {% endif %}
 
             {% if item.social  != '' %}
@@ -68,18 +67,18 @@
             {% endif %}
 
             {% if item.lead != '' %}
-              <p><strong>Лид: {{ item.lead  }}</strong></p>
+              <p><i>Лид: {{ item.lead  }}</i></p>
             {% endif %}
 
             <p>{{ item.body|raw}}</p>
 
             {% if item.tags != '' %}
-              <p>Тэги: {{ item.tags }}</p>
+              <p><i>Тэги: {{ item.tags }}</i></p>
             {% endif %}
 
             <p><strong>Тема дня: {{ row.columns.field_link_to_news.content  }}</strong></p>
               {% if item.speaker %}
-                  <i>Спикер: <span class="news-speaker">{{ item.speaker}}</span> </i>
+                  <i><strong>Спикер: <span class="news-speaker">{{ item.speaker}}</span></strong> </i>
               {% endif %}
 
             {% if item.nid in quotes_all|keys %}
@@ -97,7 +96,7 @@
                 {{ quote.body|raw }}
                 <p>
                   <i>Тэги: {{ quote.tags }} </i><br/>
-                  <i>Спикер: {{ quote.speaker }} </i>
+                  <i><strong>Спикер: {{ quote.speaker }}</strong> </i>
                 </p>
 
               {% endfor %}
@@ -156,7 +155,7 @@
         {#{{ drupal_block('views_exposed_filter_block:all_materials-block_1', wrapper=false) }}#}
         <div class="material-create">
             <h3>Создать материал</h3>
-            <ul class="list" style="">
+            <ul class="list">
                 <li><a href="/node/add/news?type=1">Новость</a></li>
                 <li><a href="/node/add/news?type=2">История Успеха</a></li>
                 <li><a href="/node/add/material_social">Соц. сети</a></li>
