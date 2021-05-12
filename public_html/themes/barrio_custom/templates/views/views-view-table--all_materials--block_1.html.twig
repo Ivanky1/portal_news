@@ -32,13 +32,7 @@
         {% endfor %}
     {% endif %}
 
-    {% if quotes_speaker_exists %}
-        {% set class_common = 'col-md-5 border mb-3' %}
-    {% else %}
-        {% set class_common = 'col-md-6 border mb-3' %}
-    {% endif %}
-
-    <div class="col-md-6 border">
+    <div class="col-md-6">
       <div class="item item-left row">
         <div class="col-md-5 nopadding hidden-xs">
           <img src="{{ item.img_src }}" />
@@ -110,7 +104,7 @@
       </div>
     </div>
 
-    <div class="col-md-6 border">
+    <div class="col-md-6">
     {% if item.nid in social_all|keys %}
       {% for social in social_all[item.nid] %}
 
@@ -145,15 +139,13 @@
 
   </div>
 
-
-
   {% endfor %}
 
 </div>
 
 </div>
 
-    <div class="col-2 border item">
+    <div class="col-2 item">
         {#{{ drupal_block('views_exposed_filter_block:all_materials-block_1', wrapper=false) }}#}
         <div class="material-create">
             <h3>Создать материал</h3>
