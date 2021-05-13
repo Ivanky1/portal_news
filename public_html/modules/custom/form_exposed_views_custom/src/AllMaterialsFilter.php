@@ -203,7 +203,7 @@ class AllMaterialsFilter {
 
         arsort($tags_all);
 
-        return array_slice(array_keys($tags_all), 0, 10);
+        return array_slice(array_keys($tags_all), 0, 15);
     }
 
     /**
