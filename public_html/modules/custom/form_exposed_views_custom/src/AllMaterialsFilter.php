@@ -178,6 +178,8 @@ class AllMaterialsFilter {
         $q->condition('node.type', $url_query['node_type']);
         self::addConditional($q, $url_query);
         $q->fields('tags', ['field_tags_value']);
+        $q->fields('node', ['created']);
+        $q->orderBy('node.created', 'DESC');
         $obj_tags = $q->distinct()->execute()->fetchAll();
         $tags_value = [];
 
@@ -191,13 +193,17 @@ class AllMaterialsFilter {
         foreach ($tags as $tag) {
             $tag = trim($tag);
 
-            if ($tag != '' && !in_array($tag, $tags_all)) {
-                $tags_all[] = $tag;
+            if ($tag != '' && !isset($tags_all[$tag])) {
+                $tags_all[$tag] = 1;
+            } else {
+                $tags_all[$tag] = $tags_all[$tag] + 1;
             }
 
         }
 
-        return $tags_all;
+        arsort($tags_all);
+
+        return array_slice(array_keys($tags_all), 0, 10);
     }
 
     /**
@@ -214,6 +220,10 @@ class AllMaterialsFilter {
         return $q->distinct()->execute()->fetchAll();
     }
 
+    /**
+     * @param $q
+     * @param $url_query
+     */
     public static function addConditional(&$q, $url_query) {
         if (self::existsQueryParam($url_query, 'publication')) {
             $q->join('node__field_date_publication', 'date', 'date.entity_id = node.nid');
