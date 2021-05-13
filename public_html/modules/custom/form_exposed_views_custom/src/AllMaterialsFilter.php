@@ -181,6 +181,11 @@ class AllMaterialsFilter {
         $q->fields('node', ['created']);
         $q->orderBy('node.created', 'DESC');
         $obj_tags = $q->distinct()->execute()->fetchAll();
+
+        if (count($obj_tags) < 1) {
+            return  [];
+        }
+
         $tags_value = [];
 
         foreach ($obj_tags as $value) {
@@ -194,11 +199,10 @@ class AllMaterialsFilter {
             $tag = trim($tag);
 
             if ($tag != '' && !isset($tags_all[$tag])) {
-                $tags_all[$tag] = 1;
-            } else {
-                $tags_all[$tag] = $tags_all[$tag] + 1;
+                $tags_all[$tag] = 0;
             }
 
+            $tags_all[$tag] = $tags_all[$tag] + 1;
         }
 
         arsort($tags_all);
