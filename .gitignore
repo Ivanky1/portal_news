@@ -6,6 +6,7 @@ vendor
 
 /public_html/themes/contrib/
 /public_html/profiles/contrib/
+/public_html/modules/contrib/
 
 # Ignore sensitive information
 /public_html/sites/*/settings.php
