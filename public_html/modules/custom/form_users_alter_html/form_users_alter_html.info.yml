@@ -1,0 +1,4 @@
+name: Form users alter html
+description: Добавление нужных классов для форм register and login
+core_version_requirement: 8.x || ^9
+type: module

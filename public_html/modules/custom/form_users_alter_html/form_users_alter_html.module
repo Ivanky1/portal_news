@@ -1,0 +1,17 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * hook_form_alter
+ * @param $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ * @param $form_id
+ */
+function form_users_alter_html_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+    switch ($form_id) {
+        case 'user_login_form' :
+            $form['actions']['submit']['#suffix'] = '<a href="/user/password">Забыли пароль</a>';
+            break;
+    }
+}

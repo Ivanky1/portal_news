@@ -222,3 +222,11 @@ header .site-top-icons ul a {
 .node-news .field--name-field-img-news a {
   display: none;
 }
+
+.page-user-login .form-actions {
+  margin: 30px 0;
+}
+
+.page-user-login .form-actions a {
+  margin-left: 15px;
+}
