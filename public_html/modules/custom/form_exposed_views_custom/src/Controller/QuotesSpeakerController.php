@@ -45,6 +45,7 @@ class QuotesSpeakerController extends ControllerBase {
                           <i>Тэги: '.$r['tags'].' </i><br/>
                           <i><strong>Спикер: '.$r['speaker'].'</strong></i>
                       </p>';
+                $html .= '<p>Автор: '.$r['author'].'</p>';
             }
         }
 

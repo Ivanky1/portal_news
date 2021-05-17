@@ -17,7 +17,8 @@
       social: row.columns.field_social_network.content[0]['field_output']["#markup"]|striptags|trim,
       speaker: row.columns.field_speaker.content[0]['field_output']["#markup"]|striptags|trim,
       date_raw: row.columns.field_date_publication_1.content[0]['field_output']["#markup"]|striptags|trim,
-      is_approve: row.columns.field_is_approve.content[0]['field_output']["#markup"]|striptags|trim
+      is_approve: row.columns.field_is_approve.content[0]['field_output']["#markup"]|striptags|trim,
+      author: row.columns.uid.content[0]['field_output']["#markup"]|striptags|trim,
     }
     %}
 
@@ -76,6 +77,8 @@
 
             <p>Тема дня: {{ row.columns.field_link_to_news.content  }}</p>
             <p>{{ row.columns.field_type_material.content }}</p>
+              <p>Автор: {{ item.author }}</p>
+
 
               {% if item.nid in quotes_all|keys %}
               <p><strong>Ключевые цитаты</strong></p>
@@ -94,10 +97,12 @@
                   <i>Тэги: {{ quote.tags }} </i><br/>
                   <i><strong>Спикер: {{ quote.speaker }}</strong> </i>
                 </p>
+                  <p>Автор: {{ quote.author }}</p>
 
               {% endfor %}
 
             {% endif %}
+
 
           </div>
         </div>
@@ -127,6 +132,7 @@
               <p><strong>{{ social.network }}</strong></p>
               {{ social.body|raw  }}
               <p>Соц. сети</p>
+              <p>Автор: {{ social.author }}</p>
             </div>
           </div>
 
@@ -145,18 +151,11 @@
 
 </div>
 
-    <div class="col-2 item">
-        {#{{ drupal_block('views_exposed_filter_block:all_materials-block_1', wrapper=false) }}#}
-        <div class="material-create">
-            <h3>Создать материал</h3>
-            <ul class="list">
-                <li><a href="/node/add/news?type=1">Новость</a></li>
-                <li><a href="/node/add/news?type=2">История Успеха</a></li>
-                <li><a href="/node/add/material_social">Соц. сети</a></li>
-                <li><a href="/node/add/quote">Цитаты</a></li>
-            </ul>
-        </div>
+    <div class="col-2 item item-left">
+        {{ drupal_block('material_create_block', wrapper=false) }}
+
         <div class="quotes-speaker"></div>
+
         {#{% if item.speaker in quotes_speaker|keys %}
 
         <p><strong>Ранее сказано</strong></p>
@@ -181,6 +180,6 @@
 
 
     {% endif %}#}
-</div>
+    </div>
 
 </div>

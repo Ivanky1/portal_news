@@ -112,9 +112,11 @@ img {
 
 .no {
   color:#ff0000;
+  font-weight: bold;
 }
 .yes {
   color: #8ec73c;
+  font-weight: bold;
 }
 
 .t-a-r {

@@ -18,6 +18,7 @@ class HelperMaterialsBase {
         $q->leftJoin('node__field_tags', 'tags', 'tags.entity_id = n.nid');
         $q->leftJoin('node__field_speaker', 'speaker', 'speaker.entity_id = n.nid');
         $q->leftJoin('node__field_is_approve', 'approve', 'approve.entity_id = n.nid');
+        $q->leftJoin('users_field_data', 'user', 'user.uid = n.uid');
         $q->condition('n.type', $type);
 
         if ($type == 'material_social') {
@@ -45,6 +46,7 @@ class HelperMaterialsBase {
         $q->fields('tags', ['field_tags_value']);
         $q->fields('speaker', ['field_speaker_value']);
         $q->fields('approve', ['field_is_approve_value']);
+        $q->fields('user', ['name']);
         $q->orderBy('date.field_date_publication_value', 'DESC');
 
         if ($limit != '') {
@@ -53,7 +55,6 @@ class HelperMaterialsBase {
 
         return $q->execute()->fetchAll();
     }
-
 
     public static function getSpeakersNews($filter_date = '') {
         $q = \Drupal::database()->select('node_field_data', 'n');
@@ -102,6 +103,7 @@ class HelperMaterialsBase {
                 'title' => '<a href="'.$url_alias.'">'.$r->title.'</a>',
                 'theme_id' => $r->field_link_to_news_target_id,
                 'is_approve' => $r->field_is_approve_value,
+                'author' => $r->name,
             ];
 
             if ($type == 'material_social') {

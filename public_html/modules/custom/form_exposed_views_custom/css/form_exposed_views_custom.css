@@ -161,3 +161,7 @@
 #views-exposed-form-all-materials-block-1 label {
   font-size: 12px;
 }
+
+.breadcrumb {
+  display: none;
+}
