@@ -162,6 +162,6 @@
   font-size: 12px;
 }
 
-.breadcrumb {
+.breadcrumb, .form-item-roles-administrator {
   display: none;
 }
