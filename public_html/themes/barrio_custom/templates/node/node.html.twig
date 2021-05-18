@@ -56,3 +56,17 @@
     </div>
   </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var success = document.querySelector('.approve-hidden')
+        var nav = document.querySelector('nav.tabs')
+
+        if (success.value == '1') {
+            nav.style.display = 'none'
+        } else {
+            nav.style.display = 'block'
+        }
+
+    });
+</script>
