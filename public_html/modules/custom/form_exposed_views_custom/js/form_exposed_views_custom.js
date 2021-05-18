@@ -42,12 +42,6 @@
                 }
             })
 
-           /* $('.approve-hidden').once('approve-hidden-active').each(function (i) {
-                if ($('.approve-hidden').length > 0 && $('.approve-hidden').val() == 0) {
-                    $('nav.tabs').show()
-                }
-            })*/
-
             if ($('.approve-hidden').length > 0 && $('.approve-hidden').val() == 0) {
                 $('nav.tabs').show()
             } else {
