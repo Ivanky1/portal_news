@@ -49,7 +49,9 @@
 
         {{ content.field_link_to_news }}
 
+        {% if node.type.target_id != 'page' %}
           Автор: {{ author_name|striptags }}
+        {% endif %}
 
       </div>
 
