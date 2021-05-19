@@ -62,14 +62,27 @@
 {% if node.type.target_id != 'page' %}
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            var success = document.querySelector('.approve-hidden')
-            var nav = document.querySelector('nav.tabs')
+            var timerId = setInterval(transformNavigation, 100)
 
-            if (success.value == '1') {
-                nav.style.display = 'none'
-            } else {
-                nav.style.display = 'block'
+            function transformNavigation() {
+                var success = document.querySelector('.approve-hidden')
+                var nav = document.querySelector('nav.tabs')
+                console.log(333)
+
+                if (!nav) {
+                    return false;
+                }
+
+                if (success.value == '1') {
+                    nav.style.display = 'none'
+                } else {
+                    nav.style.display = 'block'
+                }
+
+                clearInterval(timerId)
+
             }
+
 
         });
     </script>
