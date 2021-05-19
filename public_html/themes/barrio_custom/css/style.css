@@ -228,3 +228,7 @@ header .site-top-icons ul a {
 .page-user-login .form-actions a {
   margin-left: 15px;
 }
+
+#block-barrio-custom-page-title {
+  margin: 0 0 20px 12px;
+}
